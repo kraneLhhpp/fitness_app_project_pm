@@ -31,7 +31,7 @@ class FirstScreenPageState extends State<FirstScreenPage> {
                   mainAxisSpacing: 12,
                   crossAxisSpacing: 12,
                   childAspectRatio: 0.9,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: NeverScrollableScrollPhysics(),              
                   children: [
                     _photo('image1'),
                     _photo('image2'),
