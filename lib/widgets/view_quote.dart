@@ -6,70 +6,104 @@ class ViewQuote extends StatelessWidget {
 
   static const List<Map<String, String>> _quotes = [
     {
-      'text':
-          '“The last three or four reps is what makes the muscle grow. This area of pain divides a champion from someone who is not a champion.”',
+      'text': "“The last three or four reps is what makes the muscle grow.\n"
+          "This area of pain divides a champion from someone who is not a champion.\n"
+          "That’s what most people lack — having the guts to go on and say they’ll "
+          "go through the pain no matter what happens.\n"
+          "That’s what makes a champion.”",
       'author': 'Arnold Schwarzenegger',
       'subtitle': 'Bodybuilder, Actor',
       'avatar': 'assets/images/author.png',
     },
     {
       'text':
-          '“Strength does not come from physical capacity. It comes from an indomitable will.”',
-      'author': 'Mahatma Gandhi',
-      'subtitle': 'Leader',
-      'avatar': 'assets/images/author2.png',
+          '“Be the hardest worker in the room. It’s not about talent — it’s about effort.\n'
+              'When you’re tired and feel like you can’t push further — that’s when you grow.”',
+      'author': 'Dwayne "The Rock" Johnson',
+      'subtitle': 'Actor, Athlete',
+      'avatar': 'assets/images/rock.png',
     },
     {
       'text':
-          '“The only bad workout is the one that didn’t happen.”',
-      'author': 'Unknown',
-      'subtitle': '',
-      'avatar': 'assets/images/author3.png',
+          '“I hated every minute of training, but I said, ‘Don’t quit.’\n'
+              'Suffer now and live the rest of your life as a champion.”',
+      'author': 'Muhammad Ali',
+      'subtitle': 'Boxer, Champion',
+      'avatar': 'assets/images/ali.png',
     },
     {
       'text':
-          '“Discipline is doing what needs to be done, even if you don’t want to do it.”',
-      'author': 'Unknown',
-      'subtitle': '',
-      'avatar': 'assets/images/author4.png',
+          '“You must build calluses on your mind just like on your hands.\n'
+              'Every time you push through doubt and fatigue — you evolve.”',
+      'author': 'David Goggins',
+      'subtitle': 'Athlete, Speaker',
+      'avatar': 'assets/images/david.png',
     },
   ];
 
   @override
   Widget build(BuildContext context) {
     final q = _quotes[index % _quotes.length];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          q['text']!,
-          style: const TextStyle(fontSize: 12, color: Colors.white),
-        ),
-        const SizedBox(height: 14),
-        Row(
-          children: [
-            if ((q['avatar'] ?? '').isNotEmpty)
-              SizedBox(
-                width: 42,
-                height: 42,
-                child: Image.asset(q['avatar']!, fit: BoxFit.cover),
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          width: constraints.maxWidth,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xAF0C4180),
+            borderRadius: BorderRadius.circular(18),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Quote text
+              Text(
+                q['text']!,
+                style: const TextStyle(fontSize: 12, color: Colors.white),
+                softWrap: true,
               ),
-            const SizedBox(width: 15),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  q['author']!,
-                  style: const TextStyle(
-                      color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                if ((q['subtitle'] ?? '').isNotEmpty)
-                  Text(q['subtitle']!, style: const TextStyle(fontSize: 12, color: Color(0xFFC6CED9))),
-              ],
-            ),
-          ],
-        ),
-      ],
+
+              const SizedBox(height: 14),
+
+              Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(50),
+                    child: Image.asset(
+                      q['avatar']!,
+                      width: 42,
+                      height: 42,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        q['author']!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        q['subtitle']!,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              )
+            ],
+          ),
+        );
+      },
     );
   }
 }

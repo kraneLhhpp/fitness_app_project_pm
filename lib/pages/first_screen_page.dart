@@ -22,27 +22,34 @@ class FirstScreenPageState extends State<FirstScreenPage> {
         child: Column(  
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: SizedBox(
-                height: 400,
-                child: GridView.count(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 0.9,
-                  physics: NeverScrollableScrollPhysics(),              
-                  children: [
-                    _photo('image1'),
-                    _photo('image2'),
-                    _photo('image3'),
-                    _photo('image4'),
-                  ],
+            Flexible(
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: SizedBox(
+                  child: GridView.count(
+                    crossAxisCount: 2,
+                    mainAxisSpacing: 12,
+                    crossAxisSpacing: 12,
+                    childAspectRatio: 0.9,
+                    physics: NeverScrollableScrollPhysics(),              
+                    children: [
+                      _photo('image1'),
+                      _photo('image2'),
+                      _photo('image3'),
+                      _photo('image4'),
+                    ],
+                  ),
                 ),
               ),
             ),
 
-            const SizedBox(height: 70),
+            Expanded(
+              flex: 4,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 70),
 
             const Text('Fitness as a lifestyle', style: TextStyle(color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold)),
             const SizedBox(height: 15),
@@ -101,6 +108,9 @@ class FirstScreenPageState extends State<FirstScreenPage> {
                   );
                 }, child: Text('Log in', style: TextStyle(color: Colors.white, fontSize: 14),))
               ],
+            )
+                ],
+              ) 
             )
           ],
         ),

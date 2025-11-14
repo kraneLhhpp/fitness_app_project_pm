@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
+import 'package:fitness_app_project/pages/forgot_password_page.dart';
 import 'package:fitness_app_project/pages/home_page.dart';
 import 'package:fitness_app_project/pages/sign_up_page.dart';
 import 'package:fitness_app_project/widgets/custom_text_field.dart';
 import 'package:fitness_app_project/widgets/dot_image.dart';
+import 'package:fitness_app_project/widgets/quotes_swipes.dart';
 import 'package:fitness_app_project/widgets/view_quote.dart';
-import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,116 +15,148 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _gmailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _gmailController = TextEditingController();
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  int focusedIndex = 0;
+
+  late QuotesSwipes _quotesSwipes;
+
+  @override
+  void initState() {
+    _quotesSwipes = QuotesSwipes(totalQuotes: 4);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1B85F3),
+      backgroundColor: const Color(0xFF1B85F3),
       body: SafeArea(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              height: 255,
-              decoration: BoxDecoration(
-                color: Color(0xFF1B85F3),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(14),
-                child: Column(
-                  children: [
-                    const ViewQuote(),
-                    ViewQuote(index: focusedIndex),
-                    const SizedBox(height: 15),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: List.generate(4, (index) {
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              focusedIndex = index;
-                            });
+
+            /// ★★★★★ ADAPTIVE TOP QUOTE AREA ★★★★★
+            Flexible(
+              flex: 3,
+              child: GestureDetector(
+                onHorizontalDragEnd: (details) {
+                  setState(() {
+                    if (details.primaryVelocity! < 0) {
+                      _quotesSwipes.swipeLeft();
+                    } else {
+                      _quotesSwipes.swipeRight();
+                    }
+                  });
+                },
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          transitionBuilder: (child, animation) {
+                            return SlideTransition(
+                              position: Tween<Offset>(
+                                begin: const Offset(0.2, 0),
+                                end: Offset.zero
+                              ).animate(animation),
+                              child: FadeTransition(
+                                opacity: animation,
+                                child: child, 
+                              ),
+                            );
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 10),
-                            child: DotImage(isFocused: focusedIndex == index),
+                          child: ViewQuote(
+                            key: ValueKey(_quotesSwipes.currentIndex),
+                            index: _quotesSwipes.currentIndex,
                           ),
-                        );
-                      }),
-                    ),
-                  ],
+                        )
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(
+                          _quotesSwipes.totalQuotes,
+                          (i) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  _quotesSwipes.currentIndex = i;
+                                });
+                              },
+                              child: DotImage(
+                                isFocused: _quotesSwipes.currentIndex == i,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
+
+            /// ★★★★★ ADAPTIVE LOGIN FORM AREA ★★★★★
             Expanded(
+              flex: 5,
               child: Container(
-                height: double.infinity,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(34),
-                    topRight: Radius.circular(34),
-                  ),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(top: 16, bottom: 30),
                     child: Form(
                       key: _formKey,
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 10),
                           const Text(
                             'Login',
                             style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           const Text(
                             'Welcome back! Please enter your details.',
-                              style: TextStyle(color: Color(0xFF808B9A)),
+                            style: TextStyle(color: Color(0xFF808B9A)),
                           ),
-                          const SizedBox(height: 10),
+
+                          const SizedBox(height: 20),
+
                           CustomTextField(
                             controller: _gmailController,
-                            hintText: "example@.com",
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Email cannot be empty';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {});
-                            },
+                            hintText: "example@gmail.com",
+                            validator: (value) =>
+                                value == null || value.isEmpty ? 'Email cannot be empty' : null,
                           ),
-                          const SizedBox(height: 20),
+
+                          const SizedBox(height: 14),
+
                           CustomTextField(
                             controller: _passwordController,
                             hintText: "Password",
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'Password cannot be empty';
-                              }
-                              return null;
-                            },
-                            onChanged: (value) {
-                              setState(() {});
-                            },
+                            obscure: true,
+                            validator: (value) =>
+                                value == null || value.isEmpty ? 'Password cannot be empty' : null,
                           ),
+
                           const SizedBox(height: 20),
-                          Align(
+
+                          const Align(
                             alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Remember information',
+                            child: Text(
+                              "Remember information",
                               style: TextStyle(color: Color(0xFF808B9A)),
                             ),
                           ),
+
                           const SizedBox(height: 20),
+
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFF1B85F3),
@@ -132,10 +166,12 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             onPressed: () {
-                              if(_formKey.currentState!.validate()){
+                              if (_formKey.currentState!.validate()) {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => const HomePage())
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
                                 );
                               }
                             },
@@ -144,38 +180,46 @@ class _LoginPageState extends State<LoginPage> {
                               style: TextStyle(color: Colors.white),
                             ),
                           ),
+
                           const SizedBox(height: 10),
+
                           TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+                              );
+                            },
                             child: const Text("Forget Password?"),
                           ),
-                          const SizedBox(height: 18),
+
+                          const SizedBox(height: 14),
+
                           const Text('or', style: TextStyle(color: Color(0xFF808B9A))),
-                          const SizedBox(height: 20),
+
+                          const SizedBox(height: 16),
+
+                          /// LOGIN WITH GOOGLE BUTTON
                           Container(
                             width: double.infinity,
-                            height: 45,
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            height: 48,
                             decoration: BoxDecoration(
                               color: const Color(0xFFD9DFE6),
                               borderRadius: BorderRadius.circular(14),
                             ),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Image.asset(
-                                    'assets/images/ava_google.png',
-                                    width: 28,
-                                    height: 26,
-                                  ),
-                                  const SizedBox(width: 80),
-                                  const Text('Login with Google'),
-                                ],
-                              ),
-                            ),  
+                            child: Row(
+                              children: [
+                                Image.asset('assets/images/ava_google.png', width: 28, height: 26),
+                                const Spacer(),
+                                const Text("Login with Google"),
+                                const Spacer(flex: 2),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 30),
+
+                          const SizedBox(height: 28),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
@@ -184,18 +228,17 @@ class _LoginPageState extends State<LoginPage> {
                                 onPressed: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(
-                                      builder: (context) => const SignUpPage(),
-                                    ),
+                                    MaterialPageRoute(builder: (context) => const SignUpPage()),
                                   );
                                 },
                                 child: const Text(
-                                  'Sign up for free',
+                                  "Sign up for free",
                                   style: TextStyle(color: Color(0xFF1B85F3)),
                                 ),
                               ),
                             ],
                           ),
+
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -204,6 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
+
           ],
         ),
       ),
