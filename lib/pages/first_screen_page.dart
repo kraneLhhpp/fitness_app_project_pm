@@ -1,6 +1,6 @@
 import 'package:fitness_app_project/pages/login_page.dart';
 import 'package:fitness_app_project/pages/sign_up_page.dart';
-import 'package:fitness_app_project/widgets/dot_image.dart';
+import 'package:fitness_app_project/widgets/intro_header.dart';
 import 'package:flutter/material.dart';
 
 class FirstScreenPage extends StatefulWidget {
@@ -13,12 +13,26 @@ class FirstScreenPage extends StatefulWidget {
 class FirstScreenPageState extends State<FirstScreenPage> {
   int focusedIndex = 0;
 
+  List<String> titles = [
+  "Fitness as a lifestyle",
+  "Track your progress",
+  "Train smarter",
+  "Achieve your goals",
+];
+
+List<String> subtitles = [
+  "The perfect place to track your workouts and improve your fitness!",
+  "Keep all your workouts organized and visible!",
+  "Use powerful tools to maximize your performance!",
+  "Start your journey to becoming the best version of yourself!",
+];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF1B85F3),
       body: Padding(
-        padding: EdgeInsets.all(24),
+        padding: EdgeInsets.fromLTRB(24, 60,24,24),
         child: Column(  
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -45,79 +59,64 @@ class FirstScreenPageState extends State<FirstScreenPage> {
             ),
 
             Expanded(
-              flex: 4,
+              flex: 2,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const SizedBox(height: 70),
-
-            const Text('Fitness as a lifestyle', style: TextStyle(color: Colors.white, fontSize: 34, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 15),
-            const Text('The perfect place to track your workouts and improve your fitness!', 
-                        style: TextStyle(
-                          color: Colors.white, 
-                          fontSize: 14,
-                        )
-                      ),
-            const SizedBox(height: 15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (index) {
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      focusedIndex = index;
-                    });
-                  },
-                child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: DotImage(isFocused: focusedIndex == index),
+                  IntroHeader(
+                    currentIndex: focusedIndex,
+                    titles: titles,
+                    subtitles: subtitles,
+                    onDotTap: (i) => setState(() => focusedIndex = i),
+                    onSwipeLeft: () => setState(() {
+                      if (focusedIndex < titles.length - 1) focusedIndex++;
+                    }),
+                    onSwipeRight: () => setState(() {
+                      if (focusedIndex > 0) focusedIndex--;
+                    }),
                   ),
-                );
-              }),
-            )
-,            const SizedBox(height: 30),
 
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: Size(double.infinity, 54),
-                backgroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14)
-                )
-              ),
-              onPressed: (){
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) =>  const SignUpPage()) 
-                );
-              }, 
-              child: const Text('Join now', style: TextStyle(color: Colors.blue, fontSize: 14)),
-            ),
+                  const SizedBox(height: 20),
 
-            const SizedBox(height: 17),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: Size(double.infinity, 54),
+                      backgroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14)
+                      )
+                    ),
+                    onPressed: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) =>  const SignUpPage()) 
+                      );
+                    }, 
+                    child: const Text('Join now', style: TextStyle(color: Colors.blue, fontSize: 14)),
+                  ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Already a member?', style: TextStyle(color: Colors.white, fontSize: 14)),
-                TextButton(onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage())
-                  );
-                }, child: Text('Log in', style: TextStyle(color: Colors.white, fontSize: 14),))
-              ],
-            )
+                  const SizedBox(height: 17),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Already a member?', style: TextStyle(color: Colors.white, fontSize: 14)),
+                      TextButton(onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const LoginPage())
+                        );
+                      }, child: Text('Log in', style: TextStyle(color: Colors.white, fontSize: 14),))
+                    ],
+                  )
+                      ],
+                    ) 
+                  )
                 ],
-              ) 
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
+              ),
+            ),
+          );
+        }
   Widget _photo(String asset) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),

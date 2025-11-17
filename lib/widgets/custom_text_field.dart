@@ -6,6 +6,9 @@ class CustomTextField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onChanged;
   final bool obscure;
+  final Widget? countryPrefix;
+  final VoidCallback? togglePasswordView;
+  final bool? isHiddenPassword;
 
   const CustomTextField({
     super.key,
@@ -14,6 +17,9 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.obscure = false,
+    this.countryPrefix,
+    this.togglePasswordView,
+    this.isHiddenPassword,
   });
 
   @override
@@ -25,6 +31,15 @@ class CustomTextField extends StatelessWidget {
       onChanged: onChanged,
       style: const TextStyle(fontSize: 15),
       decoration: InputDecoration(
+        suffixIcon: obscure && togglePasswordView != null
+            ? InkWell(
+                onTap: togglePasswordView,
+                child: Icon(
+                  isHiddenPassword! ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.black,
+                ),
+              )
+            : null,
         hintText: hintText,
         filled: true,
         fillColor: const Color(0xFFF3F6FA),
@@ -34,6 +49,14 @@ class CustomTextField extends StatelessWidget {
           borderSide: const BorderSide(color: Color(0xFFE2E6EE)),
         ),
         focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF1B85F3), width: 1.4),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: const BorderSide(color: Color(0xFF1B85F3), width: 1.4),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(color: Color(0xFF1B85F3), width: 1.4),
         ),

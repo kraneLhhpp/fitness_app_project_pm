@@ -1,9 +1,11 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/pages/login_page.dart';
+import 'package:fitness_app_project/widgets/quote_header.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/pages/home_page.dart';
 import 'package:fitness_app_project/widgets/custom_text_field.dart';
 import 'package:fitness_app_project/widgets/quotes_swipes.dart';
-import 'package:fitness_app_project/widgets/dot_image.dart';
-import 'package:fitness_app_project/widgets/view_quote.dart';
+
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -22,6 +24,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passwordController = TextEditingController();
 
   late QuotesSwipes _quotesSwipes;
+  bool isHiddenPassword = true;
 
   @override
   void initState() {
@@ -29,79 +32,84 @@ class _SignUpPageState extends State<SignUpPage> {
     super.initState();
   }
 
+  void togglePasswordView() {
+    setState(() {
+      isHiddenPassword = !isHiddenPassword;
+    });
+  }
+
+  @override
+  void dispose() {
+    _fNameController.dispose();
+    _lNameController.dispose();
+    _emailController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> signUp() async {
+  if (!_formKey.currentState!.validate()) return;
+
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
+
+    if (!mounted) return; 
+      Navigator.pushNamed(context, '/verify_email');
+
+  } on FirebaseAuthException catch (e) {
+    if (!mounted) return;
+
+     print("FIREBASE ERROR: ${e.code} — ${e.message}");
+
+    String message = 'Something went wrong';
+    if (e.code == 'email-already-in-use') {
+      message = 'Email is already in use';
+    }
+
+     if (e.code == 'email-already-in-use') {
+    message = 'Email is already in use';
+  }
+
+  if (e.code == 'weak-password') {
+    message = 'Password must be at least 6 characters';
+  }
+
+  if (e.code == 'invalid-email') {
+    message = 'Invalid email format';
+  }
+
+  if (e.code == 'operation-not-allowed') {
+    message = 'Email/password sign-in is disabled in Firebase';
+  }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message))
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: const Color(0xFF1B85F3),
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
-
-            /// ★★★★★ ADAPTIVE TOP AREA ★★★★★
             Flexible(
               flex: 3,
-              child: GestureDetector(
-                onHorizontalDragEnd: (details) {
-                  setState(() {
-                    if (details.primaryVelocity! < 0) {
-                      _quotesSwipes.swipeLeft();
-                    } else {
-                      _quotesSwipes.swipeRight();
-                    }
-                  });
-                },
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: AnimatedSwitcher(
-                          duration: const Duration(milliseconds: 300),
-                          transitionBuilder: (child, animation) {
-                            return SlideTransition(
-                              position: Tween<Offset>(
-                                begin: const Offset(0.2, 0),
-                                end: Offset.zero
-                              ).animate(animation),
-                              child: FadeTransition(
-                                opacity: animation,
-                                child: child, 
-                              ),
-                            );
-                          },
-                          child: ViewQuote(
-                            key: ValueKey(_quotesSwipes.currentIndex),
-                            index: _quotesSwipes.currentIndex,
-                          ),
-                        )
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          _quotesSwipes.totalQuotes,
-                          (index) => GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                _quotesSwipes.currentIndex = index;
-                              });
-                            },
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
-                              child: DotImage(isFocused: _quotesSwipes.currentIndex == index),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              child: QuoteHeader(
+                quotesSwipes: _quotesSwipes, 
+                onDotTap: (i) => setState(() => _quotesSwipes.currentIndex = i), 
+                onSwipeLeft: () => setState(() => _quotesSwipes.swipeLeft()), 
+                onSwipeRight: () => setState(() => _quotesSwipes.swipeRight())
+              )
             ),
-
-            /// ★★★★★ ADAPTIVE FORM AREA ★★★★★
             Expanded(
               flex: 5,
               child: Container(
@@ -150,7 +158,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           CustomTextField(
                             hintText: 'Email',
                             controller: _emailController,
-                            validator: (v) => v!.isEmpty ? "Email cannot be empty" : null,
+                            validator: (email) => 
+                             email != null && !EmailValidator.validate(email)
+                                ? "Input correct email"
+                                : null
                           ),
 
                           const SizedBox(height: 12),
@@ -168,6 +179,8 @@ class _SignUpPageState extends State<SignUpPage> {
                             hintText: 'Password',
                             controller: _passwordController,
                             validator: (v) => v!.isEmpty ? "Password cannot be empty" : null,
+                            isHiddenPassword:isHiddenPassword,
+                            togglePasswordView: togglePasswordView
                           ),
 
                           const SizedBox(height: 20),
@@ -182,7 +195,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
                           const SizedBox(height: 20),
 
-                          /// BUTTON
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Color(0xFF1B85F3),
@@ -192,14 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ),
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const HomePage(),
-                                  ),
-                                );
-                              }
+                              signUp();
                             },
                             child: const Text("Create account", style: TextStyle(color: Colors.white)),
                           ),
@@ -211,7 +216,12 @@ class _SignUpPageState extends State<SignUpPage> {
                             children: [
                               const Text("Joined us before?"),
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: (){
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => const LoginPage())
+                                  );
+                                },
                                 child: const Text("Login", style: TextStyle(color: Color(0xFF1B85F3))),
                               ),
                             ],

@@ -45,40 +45,41 @@ class ViewQuote extends StatelessWidget {
   Widget build(BuildContext context) {
     final q = _quotes[index % _quotes.length];
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Container(
-          width: constraints.maxWidth,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: const Color(0xAF0C4180),
-            borderRadius: BorderRadius.circular(18),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xAF0C4180),
+        borderRadius: BorderRadius.circular(18),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            fit: FlexFit.loose,
+            child: Text(
+              q['text']!,
+              style: const TextStyle(fontSize: 12, color: Colors.white),
+              softWrap: true,
+              overflow: TextOverflow.fade,
+              maxLines: 6,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// Quote text
-              Text(
-                q['text']!,
-                style: const TextStyle(fontSize: 12, color: Colors.white),
-                softWrap: true,
-              ),
-
-              const SizedBox(height: 14),
-
-              Row(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(50),
-                    child: Image.asset(
-                      q['avatar']!,
-                      width: 42,
-                      height: 42,
-                      fit: BoxFit.cover,
-                    ),
+          const SizedBox(height: 14),
+          Row(
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(50),
+                  child: Image.asset(
+                    q['avatar']!,
+                    width: 42,
+                    height: 42,
+                    fit: BoxFit.cover,
                   ),
-                  const SizedBox(width: 14),
-                  Column(
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
@@ -88,6 +89,7 @@ class ViewQuote extends StatelessWidget {
                           fontSize: 14,
                           fontWeight: FontWeight.bold,
                         ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                       Text(
                         q['subtitle']!,
@@ -95,15 +97,16 @@ class ViewQuote extends StatelessWidget {
                           color: Colors.white70,
                           fontSize: 12,
                         ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
                       ),
                     ],
-                  )
-                ],
-              )
-            ],
-          ),
-        );
-      },
+                  ),
+                )
+              ],
+            ),
+        ],
+      ),
     );
   }
 }

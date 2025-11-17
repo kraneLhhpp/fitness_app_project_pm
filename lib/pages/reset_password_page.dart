@@ -1,8 +1,7 @@
-import 'package:fitness_app_project/pages/first_screen_page.dart';
+import 'package:fitness_app_project/widgets/bottom_elevated_button.dart';
 import 'package:fitness_app_project/widgets/custom_text_field.dart';
-import 'package:fitness_app_project/widgets/dot_image.dart';
+import 'package:fitness_app_project/widgets/quote_header.dart';
 import 'package:fitness_app_project/widgets/quotes_swipes.dart';
-import 'package:fitness_app_project/widgets/view_quote.dart';
 import 'package:flutter/material.dart';
 
 class ResetPassworPage extends StatefulWidget {
@@ -32,51 +31,12 @@ class _ResetPassworPageState extends State<ResetPassworPage> {
         children: [
           Flexible(
             flex: 3,
-            child: GestureDetector(
-                onHorizontalDragEnd: (details) {
-                  setState(() {
-                    if (details.primaryVelocity! < 0) {
-                      _quotesSwipes.swipeLeft();
-                    } else if (details.primaryVelocity! > 0) {
-                      _quotesSwipes.swipeRight();
-                    }
-                  });
-                },
-                child: Container(
-                  width: double.infinity,
-                  color: const Color(0xFF1B85F3),
-                  padding: const EdgeInsets.all(14),
-                  child: Column(
-                    children: [
-                      ViewQuote(index: _quotesSwipes.currentIndex),
-                      const SizedBox(height: 15),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          _quotesSwipes.totalQuotes,
-                          (index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _quotesSwipes.currentIndex = index;
-                                });
-                              },
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 10),
-                                child: DotImage(
-                                  isFocused:
-                                      _quotesSwipes.currentIndex == index,
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            child: QuoteHeader(
+                quotesSwipes: _quotesSwipes, 
+                onDotTap: (i) => setState(() => _quotesSwipes.currentIndex), 
+                onSwipeLeft: () => setState(() => _quotesSwipes.swipeLeft()), 
+                onSwipeRight: () => setState(() => _quotesSwipes.swipeRight())
+              )
           ),
             Expanded(
               flex: 5,
@@ -105,37 +65,17 @@ class _ResetPassworPageState extends State<ResetPassworPage> {
                           maxLines: 2,
                         ),  
                         const SizedBox(height: 20),
+                        CustomTextField(controller: _passwordController, hintText: 'Insert email address', obscure: true),
+                        const SizedBox(height: 20),
                         CustomTextField(controller: _passwordController, hintText: 'Insert email address'),
+                        Spacer(),
+                        BottomElevatedButton(formKey: _formKey, submitButton: (){})
                       ],
                     ),
                   ),
               ),
             )
         ],
-      ),
-      bottomNavigationBar: Padding(
-        padding: EdgeInsets.only(
-          left: 24, 
-          right: 24,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20
-        ),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF1B85F3),
-            minimumSize: const Size(double.infinity, 55),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(14),
-            ), 
-          ),
-          onPressed: (){
-            if(_formKey.currentState!.validate()){
-              Navigator.push(context, 
-                MaterialPageRoute(builder: (context) => const FirstScreenPage())
-              );
-            }
-          }, 
-          child: Text('Submit', style: TextStyle(color: Colors.white, fontSize: 24)),
-        ),
       ),
     );
   }

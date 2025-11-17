@@ -1,17 +1,28 @@
 import 'package:flutter/material.dart';
 
-class DotImage extends StatelessWidget{
+class DotImage extends StatelessWidget {
   final bool isFocused;
-  const DotImage({super.key, required this.isFocused});
+  final double size;
+  final Color focusedColor;
+  final Color unfocusedColor;
+
+  const DotImage({
+    super.key,
+    required this.isFocused,
+    this.size = 12.0,
+    this.focusedColor = Colors.white,
+    this.unfocusedColor = Colors.white54,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: isFocused ? 20 : 15,
-      height: isFocused ? 20 : 15,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      width: isFocused ? size * 1.5 : size,
+      height: size,
       decoration: BoxDecoration(
-        color: isFocused ? Colors.white : Color(0xFFD1E6FF),
-        shape: BoxShape.circle
+        color: isFocused ? focusedColor : unfocusedColor,
+        borderRadius: BorderRadius.circular(6),
       ),
     );
   }
