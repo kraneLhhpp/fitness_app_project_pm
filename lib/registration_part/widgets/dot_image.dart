@@ -10,8 +10,8 @@ class DotImage extends StatelessWidget {
     super.key,
     required this.isFocused,
     this.size = 12.0,
-    this.focusedColor = Colors.white,
-    this.unfocusedColor = Colors.white54,
+    this.focusedColor = Colors.pink,
+    this.unfocusedColor = Colors.pinkAccent,
   });
 
   @override

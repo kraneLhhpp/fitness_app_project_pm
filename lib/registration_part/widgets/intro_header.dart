@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/widgets/dot_image.dart';
+import 'package:fitness_app_project/registration_part/widgets/dot_image.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class IntroHeader extends StatelessWidget {
   final int currentIndex;
@@ -41,17 +42,25 @@ class IntroHeader extends StatelessWidget {
                 Text(
                   titles[currentIndex],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 34,
-                    fontWeight: FontWeight.bold,
+                  style: GoogleFonts.jetBrainsMono(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.pinkAccent,
+                      fontSize: 27,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 15),
                 Text(
                   subtitles[currentIndex],
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                  style: GoogleFonts.jetBrainsMono(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
               ],
             ),

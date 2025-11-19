@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/pages/home_page.dart';
+import 'package:fitness_app_project/homepage_part/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -100,9 +100,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to send email')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to send email')));
     }
   }
 
@@ -112,9 +112,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Верификация Email адреса'),
-      ),
+      appBar: AppBar(title: const Text('Верификация Email адреса')),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),

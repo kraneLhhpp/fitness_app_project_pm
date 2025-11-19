@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/widgets/quotes_swipes.dart';
-import 'package:fitness_app_project/widgets/view_quote.dart';
-import 'package:fitness_app_project/widgets/dot_image.dart';
+import 'package:fitness_app_project/registration_part/widgets/quotes_swipes.dart';
+import 'package:fitness_app_project/registration_part/widgets/view_quote.dart';
+import 'package:fitness_app_project/registration_part/widgets/dot_image.dart';
 
 class QuoteHeader extends StatelessWidget {
   final QuotesSwipes quotesSwipes;
@@ -43,10 +43,7 @@ class QuoteHeader extends StatelessWidget {
                       begin: const Offset(0.2, 0),
                       end: Offset.zero,
                     ).animate(animation),
-                    child: FadeTransition(
-                      opacity: animation,
-                      child: child,
-                    ),
+                    child: FadeTransition(opacity: animation, child: child),
                   );
                 },
                 child: ViewQuote(
@@ -66,9 +63,7 @@ class QuoteHeader extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: GestureDetector(
                     onTap: () => onDotTap(i),
-                    child: DotImage(
-                      isFocused: quotesSwipes.currentIndex == i,
-                    ),
+                    child: DotImage(isFocused: quotesSwipes.currentIndex == i),
                   ),
                 ),
               ),
