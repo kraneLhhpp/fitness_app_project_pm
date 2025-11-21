@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/homepage_part/pages/home_page.dart';
+import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -25,23 +25,17 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   Future<void> _initVerification() async {
     final user = FirebaseAuth.instance.currentUser;
-
-    // Если пользователя нет → НАЗАД
     if (user == null) {
-      logger.e("INIT: User is NULL → Pop screen");
       if (mounted) Navigator.pop(context);
       return;
     }
 
-    // Проверяем состояние
     isEmailVerified = user.emailVerified;
 
     if (!isEmailVerified) {
       await sendVerificationEmail();
-
-      // Проверяем каждые 3 секунды
       timer = Timer.periodic(
-        const Duration(seconds: 3),
+        const Duration(seconds: 5),
         (_) => checkEmailVerified(),
       );
     }
@@ -57,104 +51,80 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     final user = FirebaseAuth.instance.currentUser;
 
     if (user == null) {
-      logger.e("CHECK: User is NULL");
+      timer?.cancel();
       return;
-    }
+      }
 
     await user.reload();
-    final updatedUser = FirebaseAuth.instance.currentUser;
-
-    final verified = updatedUser?.emailVerified ?? false;
+    final verified = user.emailVerified;
 
     if (!mounted) return;
+
     setState(() => isEmailVerified = verified);
 
-    logger.i("Email verified: $isEmailVerified");
-
-    if (verified) timer?.cancel();
+    if (verified) {
+      timer?.cancel();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => BottomNavigation(user: user),
+        ),
+      );
+    }
   }
 
   Future<void> sendVerificationEmail() async {
     try {
       final user = FirebaseAuth.instance.currentUser;
-
-      if (user == null) {
-        logger.e("SEND: User NULL — cannot send email");
-        return;
-      }
+      if (user == null) return;
 
       await user.sendEmailVerification();
-      logger.i("Verification email sent");
 
       if (!mounted) return;
-
       setState(() => canResendEmail = false);
 
       await Future.delayed(const Duration(seconds: 5));
 
       if (!mounted) return;
-
       setState(() => canResendEmail = true);
     } catch (e) {
       logger.e("Error sending email: $e");
-
       if (!mounted) return;
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Failed to send email')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Failed to send email')));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isEmailVerified) return const HomePage();
-
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(title: const Text('Верификация Email адреса')),
+      backgroundColor: Colors.pink[50],
+      appBar: AppBar(
+        title: const Text('Verify Email'),
+        backgroundColor: Colors.pinkAccent,
+      ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Письмо с подтверждением было отправлено на вашу почту.',
-                style: TextStyle(fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 20),
-
-              ElevatedButton.icon(
-                onPressed: canResendEmail ? sendVerificationEmail : null,
-                icon: const Icon(Icons.email),
-                label: const Text('Отправить снова'),
-              ),
-
-              const SizedBox(height: 20),
-
-              TextButton(
-                onPressed: () async {
-                  timer?.cancel();
-                  final user = FirebaseAuth.instance.currentUser;
-
-                  if (user != null) {
-                    try {
-                      await user.delete();
-                    } catch (e) {
-                      logger.e("Error deleting user: $e");
-                    }
-                  }
-
-                  if (mounted) Navigator.pop(context);
-                },
-                child: const Text(
-                  'Отменить регистрацию',
-                  style: TextStyle(color: Colors.blue),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.email_outlined, size: 100, color: Colors.pinkAccent),
+                const SizedBox(height: 24),
+                const Text(
+                  'A confirmation email has been sent.\nPlease check your mailbox.',
+                  textAlign: TextAlign.center,
                 ),
-              ),
-            ],
+                const SizedBox(height: 24),
+                if (!isEmailVerified) const CircularProgressIndicator(),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: canResendEmail ? sendVerificationEmail : null,
+                  child: const Text('Resend email'),
+                ),
+              ],
+            ),
           ),
         ),
       ),

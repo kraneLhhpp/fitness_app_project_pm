@@ -116,7 +116,7 @@ class _JourneyStep4PageState extends State<JourneyStep4Page> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedIndex != null
                         ? Colors.pinkAccent
-                        : Colors.pinkAccent.withOpacity(0.3),
+                        : Colors.pinkAccent.withValues(alpha: 0.3),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),

@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final Widget? countryPrefix;
   final VoidCallback? togglePasswordView;
   final bool? isHiddenPassword;
+  final TextInputType? keyboardType;
 
   const CustomTextField({
     super.key,
@@ -21,6 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.countryPrefix,
     this.togglePasswordView,
     this.isHiddenPassword,
+    this.keyboardType
   });
 
   @override
@@ -28,7 +30,7 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       validator: validator,
-      obscureText: obscure,
+      obscureText: obscure && (isHiddenPassword ?? false),
       onChanged: onChanged,
       style: GoogleFonts.jetBrainsMono(
         textStyle: TextStyle(
@@ -37,6 +39,7 @@ class CustomTextField extends StatelessWidget {
           color: Color(0xFF808B9A),
         ),
       ),
+      keyboardType: keyboardType,
       decoration: InputDecoration(
         suffixIcon: obscure && togglePasswordView != null
             ? InkWell(

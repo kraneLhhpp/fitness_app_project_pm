@@ -2,7 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:fitness_app_project/firebase_options.dart';
 import 'package:fitness_app_project/onboarding_part/pages/journey_start_page.dart';
 import 'package:fitness_app_project/registration_part/pages/first_screen_page.dart';
-import 'package:fitness_app_project/homepage_part/pages/home_page.dart';
 import 'package:fitness_app_project/registration_part/pages/login_page.dart';
 import 'package:fitness_app_project/registration_part/pages/reset_password_page.dart';
 import 'package:fitness_app_project/registration_part/pages/sign_up_page.dart';
@@ -31,7 +30,6 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const FirebaseStream(),
         '/first_screen': (context) => const FirstScreenPage(),
-        '/home': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
         '/reset_password': (context) => const ResetPassworPage(),

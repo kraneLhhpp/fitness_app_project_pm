@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fitness_app_project/registration_part/widgets/custom_text_field.dart';
 import 'package:fitness_app_project/registration_part/widgets/quotes_swipes.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/web.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -25,6 +26,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   late QuotesSwipes _quotesSwipes;
   bool isHiddenPassword = true;
+  final logger = Logger();
 
   @override
   void initState() {
@@ -49,57 +51,61 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> signUp() async {
-    if (!_formKey.currentState!.validate()) return;
+  if (!_formKey.currentState!.validate()) return;
 
-    try {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+  try {
+    UserCredential cred = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
+    );
 
-      if (!mounted) return;
-      Navigator.pushNamed(context, '/verify_email');
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return;
+    User? user = cred.user;
 
-      print("FIREBASE ERROR: ${e.code} — ${e.message}");
+    await user?.updateDisplayName(
+        "${_fNameController.text.trim()} ${_lNameController.text.trim()}");
+    await user?.reload();
+    user = FirebaseAuth.instance.currentUser;
 
-      String message = 'Something went wrong';
-      if (e.code == 'email-already-in-use') {
-        message = 'Email is already in use';
-      }
+    await user?.sendEmailVerification();
 
-      if (e.code == 'email-already-in-use') {
-        message = 'Email is already in use';
-      }
+    if (!mounted) return;
 
-      if (e.code == 'weak-password') {
-        message = 'Password must be at least 6 characters';
-      }
+    Navigator.pushNamed(
+      context,
+      '/verify_email',
+    );
+  } on FirebaseAuthException catch (e) {
+    if (!mounted) return;
 
-      if (e.code == 'invalid-email') {
-        message = 'Invalid email format';
-      }
+    logger.e("FIREBASE ERROR: ${e.code} — ${e.message}");
 
-      if (e.code == 'operation-not-allowed') {
-        message = 'Email/password sign-in is disabled in Firebase';
-      }
+    String message = 'Something went wrong';
+    if (e.code == 'email-already-in-use') {
+      message = 'Email is already in use';
+    } else if (e.code == 'weak-password') {
+      message = 'Password must be at least 6 characters';
+    } else if (e.code == 'invalid-email') {
+      message = 'Invalid email format';
+    } else if (e.code == 'operation-not-allowed') {
+      message = 'Email/password sign-in is disabled in Firebase';
+    }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            message,
-            style: GoogleFonts.jetBrainsMono(
-              textStyle: TextStyle(
-                fontWeight: FontWeight.w600,
-                color: Colors.pinkAccent,
-              ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          message,
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.pinkAccent,
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -190,6 +196,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           const SizedBox(height: 12),
 
                           CustomTextField(
+                            keyboardType: TextInputType.phone,
                             hintText: 'Phone number',
                             controller: _phoneController,
                             validator: (v) =>

@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
 import 'package:fitness_app_project/onboarding_part/widgets/selectable_option_widget.dart';
-import 'package:fitness_app_project/homepage_part/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -98,11 +99,13 @@ class _JourneyStep5PageState extends State<JourneyStep5Page> {
                 child: ElevatedButton(
                   onPressed: selectedIndex != null
                       ? () {
+                        final user = FirebaseAuth.instance.currentUser;
+
                           Navigator.push(
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, animation1, animation2) =>
-                                  HomePage(),
+                                  BottomNavigation(user: user!),
                               transitionDuration: Duration.zero,
                             ),
                           );
@@ -111,7 +114,7 @@ class _JourneyStep5PageState extends State<JourneyStep5Page> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: selectedIndex != null
                         ? Colors.pinkAccent
-                        : Colors.pinkAccent.withOpacity(0.3),
+                        : Colors.pinkAccent.withValues(alpha: 0.2),
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),

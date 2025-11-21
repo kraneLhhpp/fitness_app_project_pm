@@ -55,21 +55,17 @@ class ViewQuote extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Flexible(
-            fit: FlexFit.loose,
-            child: Text(
-              q['text']!,
-              style: GoogleFonts.jetBrainsMono(
-                textStyle: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
-                  fontSize: 12,
-                ),
+          Text(
+            q['text']!,
+            style: GoogleFonts.jetBrainsMono(
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+                fontSize: 12,
               ),
-              softWrap: true,
-              overflow: TextOverflow.fade,
-              maxLines: 6,
             ),
+            softWrap: true,
+
           ),
           const SizedBox(height: 14),
           Row(

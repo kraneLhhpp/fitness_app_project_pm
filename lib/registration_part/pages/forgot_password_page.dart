@@ -105,15 +105,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                               return BottomElevatedButton(
                                 formKey: _formKey,
                                 submitButton: () async {
-                                  if (!_formKey.currentState!.validate())
+                                  if (!_formKey.currentState!.validate()){
                                     return;
-
+                                  }
                                   try {
                                     await FirebaseAuth.instance
                                         .sendPasswordResetEmail(
                                           email: _emailController.text.trim(),
                                         );
-
+                                    if(!context.mounted) return; 
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text(
@@ -128,7 +128,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                                         ),
                                       ),
                                     );
-
+                                    if(!context.mounted) return;
                                     Navigator.pop(context);
                                   } on FirebaseAuthException catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(

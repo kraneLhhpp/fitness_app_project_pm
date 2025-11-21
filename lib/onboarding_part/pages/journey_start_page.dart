@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
 import 'package:fitness_app_project/onboarding_part/pages/journey_step_1_page.dart';
 import 'package:fitness_app_project/onboarding_part/widgets/custom_action_button_widget.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +63,21 @@ class JourneyStartPage extends StatelessWidget {
               text: 'Skip for now',
               backgroundColor: Colors.white,
               foregroundColor: Colors.black,
-              onPressed: () {},
+              onPressed: () {
+                final user = FirebaseAuth.instance.currentUser;
+                if (user != null) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => BottomNavigation(user: user), 
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('No user found, please login again')),
+                  );
+                }
+              },
             ),
           ],
         ),

@@ -31,10 +31,9 @@ class QuoteHeader extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         width: double.infinity,
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
-            Flexible(
-              fit: FlexFit.loose,
+            Expanded(
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
                 transitionBuilder: (child, animation) {
@@ -46,9 +45,11 @@ class QuoteHeader extends StatelessWidget {
                     child: FadeTransition(opacity: animation, child: child),
                   );
                 },
-                child: ViewQuote(
-                  key: ValueKey(quotesSwipes.currentIndex),
-                  index: quotesSwipes.currentIndex,
+                child: Expanded(
+                  child: ViewQuote(
+                    key: ValueKey(quotesSwipes.currentIndex),
+                    index: quotesSwipes.currentIndex,
+                  ),
                 ),
               ),
             ),
