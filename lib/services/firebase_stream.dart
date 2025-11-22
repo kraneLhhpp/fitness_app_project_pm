@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/pages/first_screen_page.dart';
+import 'package:fitness_app_project/pages/home_screen.dart';
 import 'package:fitness_app_project/pages/verify_email_page.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,13 @@ class FirebaseStream extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return const Scaffold(
-              body: Center(child: Text('Что-то пошло не так!')));
+            body: Center(child: Text('Что-то пошло не так!')),
+          );
         } else if (snapshot.hasData) {
           if (!snapshot.data!.emailVerified) {
             return const VerifyEmailScreen();
           }
-          return const FirstScreenPage();
+          return const HomeScreen();
         } else {
           return const FirstScreenPage();
         }
