@@ -45,18 +45,9 @@ class _BottomNavigationState extends State<BottomNavigation> {
           });
         },
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_filled),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'My Courses',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.list),
-            label: 'All Courses',
-          ),
+          BottomNavigationBarItem(icon: Icon(Icons.home_filled), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'My Courses'),
+          BottomNavigationBarItem(icon: Icon(Icons.list), label: 'All Courses'),
           BottomNavigationBarItem(
             icon: Icon(Icons.person_outline),
             label: 'Profile',

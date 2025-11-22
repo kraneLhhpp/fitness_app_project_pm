@@ -45,7 +45,8 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
       body: FutureBuilder(
         future: _allExercisesFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
+          if (!snapshot.hasData)
+            return Center(child: CircularProgressIndicator());
 
           final data = snapshot.data!;
 
@@ -84,4 +85,3 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
     );
   }
 }
-

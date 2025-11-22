@@ -97,10 +97,7 @@ class MuscleGroupCard extends StatelessWidget {
         children: [
           Icon(icon, size: 16, color: Colors.blueAccent),
           const SizedBox(width: 5),
-          Text(
-            text,
-            style: const TextStyle(color: Colors.black, fontSize: 13),
-          ),
+          Text(text, style: const TextStyle(color: Colors.black, fontSize: 13)),
         ],
       ),
     );

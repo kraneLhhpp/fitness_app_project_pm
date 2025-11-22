@@ -58,25 +58,22 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (_) => BottomNavigation(user: user!),
-        ),
-        (route) => false, 
+        MaterialPageRoute(builder: (_) => BottomNavigation(user: user!)),
+        (route) => false,
       );
-
     } on FirebaseAuthException catch (e) {
       if (!mounted) return;
 
       String message =
           (e.code == 'user-not-found' || e.code == 'wrong-password')
-              ? 'Email or password is incorrect'
-              : 'Something went wrong';
+          ? 'Email or password is incorrect'
+          : 'Something went wrong';
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(message)));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
