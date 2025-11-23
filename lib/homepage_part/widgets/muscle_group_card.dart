@@ -34,7 +34,6 @@ class MuscleGroupCard extends StatelessWidget {
         ),
         child: Stack(
           children: [
-            // Black gradient overlay
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
@@ -49,13 +48,11 @@ class MuscleGroupCard extends StatelessWidget {
               ),
             ),
 
-            // Content
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Text(
                     muscle.toUpperCase(),
                     style: const TextStyle(

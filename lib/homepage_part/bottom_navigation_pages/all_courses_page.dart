@@ -18,17 +18,17 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
   late Future<Map<String, List<Exercise>>> _allExercisesFuture;
 
   final muscleImages = {
-    "abdominals": "assets/images/gym_zall.png",
-    "biceps": "assets/images/gym_zall.png",
-    "chest": "assets/images/gym_zall.png",
-    "forearms": "assets/images/gym_zall.png",
-    "glutes": "assets/images/gym_zall.png",
-    "lats": "assets/images/gym_zall.png",
-    "lower_back": "assets/images/gym_zall.png",
-    "middle_back": "assets/images/gym_zall.png",
-    "neck": "assets/images/gym_zall.png",
-    "quadriceps": "assets/images/gym_zall.png",
-    "triceps": "assets/images/gym_zall.png",
+    "abdominals": "assets/images/abs_training.png",
+    "biceps": "assets/images/biceps_training.png",
+    "chest": "assets/images/chest_training.png",
+    "forearms": "assets/images/forearms_training.png",
+    "glutes": "assets/images/glutes_training.png",
+    "lats": "assets/images/lats_training.png",
+    "lower_back": "assets/images/lower_back_training.png",
+    "middle_back": "assets/images/middle_back_training.png",
+    "neck": "assets/images/neck_training.png",
+    "quadriceps": "assets/images/quad_training.png",
+    "triceps": "assets/images/triceps_training.png",
   };
 
   @override
@@ -45,8 +45,9 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
       body: FutureBuilder(
         future: _allExercisesFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return Center(child: CircularProgressIndicator());
+          }
 
           final data = snapshot.data!;
 
@@ -61,7 +62,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
                 muscle: muscle,
                 imagePath: muscleImages[muscle] ?? "assets/images/default.png",
                 exercisesCount: exercises.length,
-                minutes: exercises.length * 2, // пример
+                minutes: exercises.length * 2,
                 level: "Beginner",
                 onTap: () {
                   Navigator.push(
@@ -71,8 +72,8 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
                         muscle: muscle,
                         imagePath: muscleImages[muscle]!,
                         exercisesCount: exercises.length,
-                        minutes: exercises.length * 2,
-                        level: "Beginner",
+                        level: exercises.first.difficulty, // берем сложность первого упражнения
+                        exercises: exercises,
                       ),
                     ),
                   );
@@ -82,6 +83,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
           );
         },
       ),
+
     );
   }
 }

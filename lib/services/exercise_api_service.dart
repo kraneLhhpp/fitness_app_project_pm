@@ -60,38 +60,27 @@ class ExerciseApiService {
 
   Future<Map<String, List<Exercise>>> getAllMuscleExercises() async {
     Map<String, List<Exercise>> result = {};
-
     const muscles = [
-      'abdominals',
-      'biceps',
-      'chest',
-      'forearms',
-      'glutes',
-      'lats',
-      'lower_back',
-      'middle_back',
-      'neck',
-      'quadriceps',
-      'triceps'
+      'abdominals', 'biceps', 'chest', 'forearms',
+      'glutes', 'lats', 'lower_back', 'middle_back',
+      'neck', 'quadriceps', 'triceps'
     ];
 
     try {
-      for (final muscle in muscles) {
-        final response = await _dio.get('/exercises', queryParameters: {
-          'muscle': muscle,
-        });
-
+      final futures = muscles.map((muscle) async {
+        final response = await _dio.get('/exercises', queryParameters: {'muscle': muscle});
         final List list = response.data;
-
         result[muscle] = list.map((e) => Exercise.fromJson(e)).toList();
-      }
+      });
 
+      await Future.wait(futures); 
       return result;
     } catch (e) {
       logger.e("API error: $e");
       return {};
     }
   }
+
   Future<List<Exercise>> getExercises({required String muscle}) async {
   try {
     final response = await _dio.get('/exercises', queryParameters: {

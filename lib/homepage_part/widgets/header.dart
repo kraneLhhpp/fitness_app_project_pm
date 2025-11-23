@@ -11,8 +11,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(70);
 
   String get userName {
-    return user.displayName ?? user.email?.split('@').first ?? 'User';
+  if (user.displayName != null && user.displayName!.isNotEmpty) {
+    return user.displayName!.split(" ").first;
   }
+
+  if (user.email != null && user.email!.contains('@')) {
+    return user.email!.split('@').first;
+  }
+
+  return 'User';
+}
 
   @override
   Widget build(BuildContext context) {

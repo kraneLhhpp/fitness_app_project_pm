@@ -12,41 +12,97 @@ class MyCoursesPage extends StatefulWidget {
 }
 
 class _MyCoursesPageState extends State<MyCoursesPage> {
+  int getMinutes(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'beginner':
+        return 15;
+      case 'intermediate':
+        return 25;
+      case 'advanced':
+      case 'expert':
+        return 40;
+      default:
+        return 15;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final favorites = FavoriteService().favorites;
 
     return Scaffold(
-      appBar: AppBar(title: Text("My Favorite Exercises")),
-
+      appBar: AppBar(title: const Text("My Favorite Exercises")),
       body: favorites.isEmpty
-          ? Center(child: Text("No favorites yet"))
-          : ListView.builder(
-              itemCount: favorites.length,
-              itemBuilder: (context, i) {
-                final ex = favorites[i];
-
-                return ListTile(
-                  title: Text(ex.name),
-                  subtitle: Text("Muscle: ${ex.muscle}"),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () {
-                      setState(() {
-                        FavoriteService().removeFromFavorites(ex);
-                      });
+          ? const Center(child: Text("No favorites yet"))
+          : Padding(
+              padding: const EdgeInsets.all(16),
+              child: ListView.separated(
+                itemCount: favorites.length,
+                separatorBuilder: (_, __) => const SizedBox(height: 16),
+                itemBuilder: (context, index) {
+                  final ex = favorites[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => ExerciseDetailsPage(exercise: ex),
+                        ),
+                      );
                     },
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ExerciseDetailsPage(exercise: ex),
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 10,
+                              offset: const Offset(0, 5),
+                              color: Colors.black12)
+                        ],
                       ),
-                    );
-                  },
-                );
-              },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(ex.name,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 18)),
+                          const SizedBox(height: 10),
+                          Row(
+                            children: [
+                              Icon(Icons.star, size: 14, color: Colors.blueAccent),
+                              const SizedBox(width: 6),
+                              Text(ex.difficulty),
+                              const SizedBox(width: 16),
+                              Icon(Icons.timer, size: 14, color: Colors.green),
+                              const SizedBox(width: 6),
+                              Text("${getMinutes(ex.difficulty)} min"),
+                              const Spacer(),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    FavoriteService().removeFromFavorites(ex);
+                                  });
+                                },
+                              )
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.fitness_center, size: 14, color: Colors.orange),
+                              const SizedBox(width: 6),
+                              Text(ex.equipment),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
     );
   }

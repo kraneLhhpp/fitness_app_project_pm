@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
+import 'package:fitness_app_project/registration_part/pages/first_screen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
@@ -122,6 +123,22 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                 ElevatedButton(
                   onPressed: canResendEmail ? sendVerificationEmail : null,
                   child: const Text('Resend email'),
+                ),
+                const SizedBox(height: 12),
+
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => FirstScreenPage(), 
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  child: const Text("Go to Main Menu"),
                 ),
               ],
             ),
