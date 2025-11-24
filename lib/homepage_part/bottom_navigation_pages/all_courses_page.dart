@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/exercises/muscle_detail_page.dart';
-import 'package:fitness_app_project/homepage_part/widgets/muscle_group_card.dart';
 import 'package:fitness_app_project/services/exercise_api_service.dart';
 import 'package:fitness_app_project/services/models/exercise.dart';
 import 'package:flutter/material.dart';
@@ -40,50 +39,137 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("All Courses")),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: const Text(
+          "All Workouts",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 0,
+        backgroundColor: Colors.pinkAccent,
+      ),
 
       body: FutureBuilder(
         future: _allExercisesFuture,
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: CircularProgressIndicator(),
+              ),
+            );
           }
 
-          final data = snapshot.data!;
+          final data = snapshot.data;
 
-          return ListView(
-            children: data.entries.map((entry) {
-              final muscle = entry.key;
-              final exercises = entry.value;
+          if (data == null || data.isEmpty) {
+            return const Center(
+              child: Text(
+                "No data available",
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }
 
-              if (exercises.isEmpty) return SizedBox.shrink();
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            itemCount: data.length,
+            itemBuilder: (context, index) {
+              final muscle = data.keys.elementAt(index);
+              final exercises = data[muscle]!;
 
-              return MuscleGroupCard(
-                muscle: muscle,
-                imagePath: muscleImages[muscle] ?? "assets/images/default.png",
-                exercisesCount: exercises.length,
-                minutes: exercises.length * 2,
-                level: "Beginner",
+              return GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => MuscleDetailsPage(
                         muscle: muscle,
-                        imagePath: muscleImages[muscle]!,
                         exercisesCount: exercises.length,
-                        level: exercises.first.difficulty, // берем сложность первого упражнения
+                        level: exercises.first.difficulty,
                         exercises: exercises,
                       ),
                     ),
                   );
                 },
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 180),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(18),
+                    border: Border.all(
+                      width: 2,
+                      color: Colors.pinkAccent.withValues(alpha: 0.4),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.pinkAccent.withValues(alpha: 0.25),
+                        blurRadius: 8,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          muscleImages[muscle] ??
+                              "assets/images/default.png",
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              muscle.replaceAll("_", " ").toUpperCase(),
+                              style: const TextStyle(
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              "${exercises.length} exercises • ${exercises.length * 2} min",
+                              style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 13,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Level: ${exercises.first.difficulty}",
+                              style: const TextStyle(
+                                color: Colors.pinkAccent,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18,
+                        color: Colors.pinkAccent,
+                      ),
+                    ],
+                  ),
+                ),
               );
-            }).toList(),
+            },
           );
         },
       ),
-
     );
   }
 }

@@ -74,7 +74,6 @@ class _TrainingDaysState extends State<TrainingDays> {
                 MaterialPageRoute(
                   builder: (_) => MuscleDetailsPage(
                     muscle: muscle,
-                    imagePath: '',
                     exercisesCount: exercises.length,
                     level: exercises.first.difficulty,
                     exercises: exercises,

@@ -31,78 +31,157 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
     final favorites = FavoriteService().favorites;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("My Favorite Exercises")),
+      backgroundColor: Colors.grey[100],
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.pinkAccent,
+        centerTitle: true,
+        title: const Text(
+          "My Courses",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+
       body: favorites.isEmpty
-          ? const Center(child: Text("No favorites yet"))
-          : Padding(
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.bookmark_border,
+                      size: 120, color: Colors.grey.shade400),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "No saved workouts yet",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "Add exercises from the catalog",
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                ],
+              ),
+            )
+
+          : ListView.builder(
               padding: const EdgeInsets.all(16),
-              child: ListView.separated(
-                itemCount: favorites.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
-                itemBuilder: (context, index) {
-                  final ex = favorites[index];
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => ExerciseDetailsPage(exercise: ex),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                              color: Colors.black12)
-                        ],
+              itemCount: favorites.length,
+              itemBuilder: (context, index) {
+                final ex = favorites[index];
+
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ExerciseDetailsPage(exercise: ex),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(ex.name,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 18)),
-                          const SizedBox(height: 10),
-                          Row(
+                    );
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 18),
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(22),
+                      border: Border.all(
+                        color: Colors.pinkAccent,
+                        width: 2,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                          color: Colors.black12,
+                        )
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        /// Icon square
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.blue.shade50,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: const Icon(
+                            Icons.fitness_center,
+                            size: 36,
+                            color: Colors.blue,
+                          ),
+                        ),
+
+                        const SizedBox(width: 16),
+
+                        /// Text Info
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(Icons.star, size: 14, color: Colors.blueAccent),
-                              const SizedBox(width: 6),
-                              Text(ex.difficulty),
-                              const SizedBox(width: 16),
-                              Icon(Icons.timer, size: 14, color: Colors.green),
-                              const SizedBox(width: 6),
-                              Text("${getMinutes(ex.difficulty)} min"),
-                              const Spacer(),
-                              IconButton(
-                                icon: const Icon(Icons.delete, color: Colors.red),
-                                onPressed: () {
-                                  setState(() {
-                                    FavoriteService().removeFromFavorites(ex);
-                                  });
-                                },
+                              Text(
+                                ex.name,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+
+                              const SizedBox(height: 10),
+
+                              Row(
+                                children: [
+                                  Icon(Icons.star,
+                                      size: 14, color: Colors.orange),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    ex.difficulty,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+                                  const SizedBox(width: 14),
+                                  Icon(Icons.timer,
+                                      size: 14, color: Colors.blueAccent),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    "${getMinutes(ex.difficulty)} min",
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(height: 6),
+
+                              Row(
+                                children: [
+                                  Icon(Icons.sports_gymnastics,
+                                      size: 14, color: Colors.green),
+                                  const SizedBox(width: 5),
+                                  Text(ex.equipment),
+                                ],
                               )
                             ],
                           ),
-                          const SizedBox(height: 8),
-                          Row(
-                            children: [
-                              Icon(Icons.fitness_center, size: 14, color: Colors.orange),
-                              const SizedBox(width: 6),
-                              Text(ex.equipment),
-                            ],
-                          )
-                        ],
-                      ),
+                        ),
+
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.pinkAccent),
+                          onPressed: () {
+                            setState(() {
+                              FavoriteService().removeFromFavorites(ex);
+                            });
+                          },
+                        )
+                      ],
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              },
             ),
     );
   }

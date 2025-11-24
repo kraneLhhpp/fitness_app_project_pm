@@ -23,67 +23,92 @@ class AllProgramsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("All Programs")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: ListView.separated(
-          itemCount: exercises.length,
-          separatorBuilder: (_, __) => const SizedBox(height: 16),
-          itemBuilder: (context, index) {
-            final ex = exercises[index];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ExerciseDetailsPage(exercise: ex),
-                  ),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                  boxShadow: [
-                    BoxShadow(
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                        color: Colors.black12)
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(ex.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18)),
-                    const SizedBox(height: 10),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 14, color: Colors.blueAccent),
-                        const SizedBox(width: 6),
-                        Text(ex.difficulty),
-                        const SizedBox(width: 16),
-                        Icon(Icons.timer, size: 14, color: Colors.green),
-                        const SizedBox(width: 6),
-                        Text("${getMinutes(ex.difficulty)} min"),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.fitness_center, size: 14, color: Colors.orange),
-                        const SizedBox(width: 6),
-                        Text(ex.equipment),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
+      backgroundColor: Colors.white,
+
+      appBar: AppBar(
+        backgroundColor: Colors.pinkAccent,
+        elevation: 0,
+        centerTitle: true,
+        title: const Text(
+          "All Programs",
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+      ),
+
+      body: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: exercises.length,
+        separatorBuilder: (_, __) => const SizedBox(height: 16),
+
+        itemBuilder: (context, i) {
+          final ex = exercises[i];
+
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ExerciseDetailsPage(exercise: ex),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(18),
+                border: Border.all(
+                  color: Colors.pinkAccent.withValues(alpha: 0.4),
+                  width: 1.5,
+                ),
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.pinkAccent.withValues(alpha: 0.2),
+                    blurRadius: 8,
+                    offset: const Offset(0, 3),
+                  ),
+                ],
+              ),
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    ex.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 18,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.star, size: 16, color: Colors.pinkAccent),
+                      const SizedBox(width: 6),
+                      Text(ex.difficulty),
+                      const SizedBox(width: 16),
+                      const Icon(Icons.timer, size: 16, color: Colors.green),
+                      const SizedBox(width: 6),
+                      Text("${getMinutes(ex.difficulty)} min"),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      const Icon(Icons.fitness_center,
+                          size: 16, color: Colors.orange),
+                      const SizedBox(width: 6),
+                      Text(ex.equipment),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

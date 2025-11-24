@@ -5,6 +5,7 @@ class Exercise {
   final String equipment;
   final String difficulty;
   final String instructions;
+  final String videoUrl; 
 
   Exercise({
     required this.id,
@@ -13,6 +14,7 @@ class Exercise {
     required this.equipment,
     required this.difficulty,
     required this.instructions,
+    required this.videoUrl,
   });
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Exercise {
       equipment: json['equipment'] ?? '',
       difficulty: json['difficulty'] ?? '',
       instructions: json['instructions'] ?? '',
+      videoUrl: json['videoUrl'] ?? '',
     );
   }
 }
