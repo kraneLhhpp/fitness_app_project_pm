@@ -1,4 +1,4 @@
-import 'package:fitness_app_project/services/exercise_api_service.dart';
+import 'package:fitness_app_project/homepage_part/services/exercise_api_service.dart';
 import 'package:flutter/material.dart';
 
 class ExercisesPage extends StatelessWidget {

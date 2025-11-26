@@ -1,7 +1,7 @@
 import 'package:fitness_app_project/homepage_part/exercises/see_all_programs_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/services/exercise_api_service.dart';
-import 'package:fitness_app_project/services/models/exercise.dart';
+import 'package:fitness_app_project/homepage_part/services/exercise_api_service.dart';
+import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 
 class ProgramsSection extends StatefulWidget {
   final String currentMuscle;

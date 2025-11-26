@@ -1,4 +1,4 @@
-import 'package:fitness_app_project/services/models/exercise.dart';
+import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 
 class FavoriteService {
   static final FavoriteService _instance = FavoriteService._internal();

@@ -1,7 +1,7 @@
 import 'package:fitness_app_project/homepage_part/exercises/exercise_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/services/favorite_service.dart';
+import 'package:fitness_app_project/homepage_part/services/favorite_service.dart';
 
 class MyCoursesPage extends StatefulWidget {
   final User user;
@@ -104,7 +104,6 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                     ),
                     child: Row(
                       children: [
-                        /// Icon square
                         Container(
                           width: 70,
                           height: 70,
@@ -121,7 +120,6 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
 
                         const SizedBox(width: 16),
 
-                        /// Text Info
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

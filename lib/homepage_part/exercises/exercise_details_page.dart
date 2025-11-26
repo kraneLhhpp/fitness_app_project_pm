@@ -1,8 +1,7 @@
-import 'package:fitness_app_project/homepage_part/exercises/exercise_video_page.dart';
-import 'package:fitness_app_project/services/completed_service.dart';
+import 'package:fitness_app_project/homepage_part/services/completed_service.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/services/models/exercise.dart';
-import 'package:fitness_app_project/services/favorite_service.dart';
+import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
+import 'package:fitness_app_project/homepage_part/services/favorite_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 
@@ -21,7 +20,7 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
 
   if (await canLaunchUrl(url)) {
     await launchUrl(url, mode: LaunchMode.externalApplication);
-  } else {
+  } else { 
     if(!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Cannot open video")),
@@ -33,6 +32,8 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
   @override
   Widget build(BuildContext context) {
     final isFav = FavoriteService().isFavorite(widget.exercise);
+    final isCompleted = CompletedService().isCompleted(widget.exercise);
+    final exName = widget.exercise.name;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,7 +54,7 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
           children: [
 
             Text(
-              widget.exercise.name,
+              exName,
               style: const TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
@@ -106,86 +107,83 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
 
             const SizedBox(height: 24),
 
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pinkAccent,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: Icon(
-                isFav ? Icons.check : Icons.favorite,
-                color: Colors.white,
-              ),
-              label: Text(
-                isFav ? "Added to My Courses" : "Add to My Courses",
-                style: const TextStyle(color: Colors.white),
-              ),
+            buttonType(
+              icon: isFav ? Icons.check : Icons.favorite,
+              text: isFav ? 'Added to Favorites' : 'Add to Favorites',
               onPressed: () {
                 FavoriteService().addToFavorites(widget.exercise);
                 setState(() {});
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content:
-                        Text("${widget.exercise.name} added to My Courses"),
-                  ),
-                );
+                customSnackBar(context, exName, 'added to Favorites');
               },
             ),
             const SizedBox(height: 14),
+            buttonType(
+              icon: Icons.play_arrow, 
+              text: 'Watch Video', 
+              onPressed: () async{
+                String urlToLaunch = widget.exercise.videoUrl;
 
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pinkAccent,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.play_arrow, color: Colors.white),
-              label: const Text(
-                "Watch Video",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                if (widget.exercise.videoUrl.isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("No video available for this exercise")),
-                  );
-                  return;
+                if (urlToLaunch.isEmpty) {
+                  final query = Uri.encodeComponent("${widget.exercise.name} exercise tutorial");
+                  urlToLaunch = "https://www.youtube.com/results?search_query=$query";
                 }
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ExerciseVideoPage(videoUrl: widget.exercise.videoUrl),
-                  ),
-                );
+
+                final uri = Uri.parse(urlToLaunch);
+                
+                try {
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } else {
+                      await launchUrl(uri, mode: LaunchMode.platformDefault);
+                    }
+                } catch (e) {
+                    if(!context.mounted) return;
+                    customSnackBar(context, exName, ': could not launch video');
+                }
               },
             ),  
-            ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
-                ),
-              ),
-              icon: const Icon(Icons.check_circle, color: Colors.white),
-              label: const Text(
-                "Выполнено",
-                style: TextStyle(color: Colors.white),
-              ),
-              onPressed: () {
-                CompletedService().markCompleted(widget.exercise);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("${widget.exercise.name} отмечено как выполнено")),
-                );
-              },
-            ),
+            const SizedBox(height: 14),
+            buttonType(
+              icon: isCompleted ? Icons.check : Icons.check_circle , 
+              text: isCompleted ? 'Completed' : 'Complete', 
+              onPressed: (){
+                CompletedService().markCompleted(widget.exercise); 
+                setState(() {});
+                customSnackBar(context, exName, 'mark as completed');
+              }
+            )
           ],
         ),
       ),
     );
   }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackBar(BuildContext context, String exName, String markText) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: const Duration(milliseconds: 1400),
+                  content: Text("$exName $markText")
+                )
+              );
+  }
+
+  ElevatedButton buttonType({
+  required IconData icon,
+  required String text,
+  required VoidCallback onPressed,
+  }) {
+  return ElevatedButton.icon(
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.pinkAccent,
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+    ),
+    icon: Icon(icon, color: Colors.white),
+    label: Text(text, style: const TextStyle(color: Colors.white)),
+    onPressed: onPressed,
+  );
+}
+
 }

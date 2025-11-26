@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/exercises/muscle_detail_page.dart';
-import 'package:fitness_app_project/services/exercise_api_service.dart';
-import 'package:fitness_app_project/services/models/exercise.dart';
+import 'package:fitness_app_project/homepage_part/services/exercise_api_service.dart';
+import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 import 'package:flutter/material.dart';
 
 class AllCoursesPage extends StatefulWidget {
@@ -62,6 +62,39 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
             );
           }
 
+          if (snapshot.hasError) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, color: Colors.red, size: 48),
+            const SizedBox(height: 10),
+            Text(
+              "Error occurred:",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+            Text(
+              "${snapshot.error}", // Это покажет текст ошибки
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.red),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _allExercisesFuture = _api.getAllMuscleExercises();
+                });
+              },
+              child: const Text("Retry"),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
           final data = snapshot.data;
 
           if (data == null || data.isEmpty) {
@@ -78,7 +111,12 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
             itemCount: data.length,
             itemBuilder: (context, index) {
               final muscle = data.keys.elementAt(index);
-              final exercises = data[muscle]!;
+              final exercises = data[muscle] ?? [];
+              if (exercises.isEmpty) return const SizedBox.shrink();
+
+              final String level = exercises.isNotEmpty 
+                                   ? exercises.first.difficulty 
+                                   : 'N/A';
 
               return GestureDetector(
                 onTap: () {
@@ -88,7 +126,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
                       builder: (_) => MuscleDetailsPage(
                         muscle: muscle,
                         exercisesCount: exercises.length,
-                        level: exercises.first.difficulty,
+                        level: level,
                         exercises: exercises,
                       ),
                     ),
@@ -119,7 +157,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
                         borderRadius: BorderRadius.circular(12),
                         child: Image.asset(
                           muscleImages[muscle] ??
-                              "assets/images/default.png",
+                              "assets/images/abss.png",
                           width: 80,
                           height: 80,
                           fit: BoxFit.cover,
@@ -147,7 +185,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              "Level: ${exercises.first.difficulty}",
+                              "Level: $level",
                               style: const TextStyle(
                                 color: Colors.pinkAccent,
                                 fontWeight: FontWeight.w600,

@@ -1,6 +1,6 @@
 import 'package:fitness_app_project/homepage_part/exercises/all_programs_page.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/services/models/exercise.dart';
+import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 import 'package:fitness_app_project/homepage_part/exercises/exercise_details_page.dart';
 
 class MuscleDetailsPage extends StatelessWidget {
