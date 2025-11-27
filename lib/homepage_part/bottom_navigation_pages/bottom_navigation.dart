@@ -4,6 +4,7 @@ import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/home_p
 import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/all_courses_page.dart';
 import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/my_courses_page.dart';
 import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/profile_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BottomNavigation extends StatefulWidget {
   final User user;
@@ -39,6 +40,16 @@ class _BottomNavigationState extends State<BottomNavigation> {
         currentIndex: _currentIndex,
         selectedItemColor: Colors.pinkAccent,
         unselectedItemColor: Colors.grey,
+
+        selectedLabelStyle: GoogleFonts.jetBrainsMono(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ),
+        unselectedLabelStyle: GoogleFonts.jetBrainsMono(
+          fontSize: 10,
+          fontWeight: FontWeight.w400,
+        ),
+
         onTap: (value) {
           setState(() {
             _currentIndex = value;

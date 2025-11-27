@@ -22,7 +22,7 @@ class CustomTextField extends StatelessWidget {
     this.countryPrefix,
     this.togglePasswordView,
     this.isHiddenPassword,
-    this.keyboardType
+    this.keyboardType,
   });
 
   @override
@@ -36,7 +36,7 @@ class CustomTextField extends StatelessWidget {
         textStyle: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 16,
-          color: Color(0xFF808B9A),
+          color: Colors.black,
         ),
       ),
       keyboardType: keyboardType,
@@ -46,7 +46,7 @@ class CustomTextField extends StatelessWidget {
                 onTap: togglePasswordView,
                 child: Icon(
                   isHiddenPassword! ? Icons.visibility_off : Icons.visibility,
-                  color: Colors.black,
+                  color: Colors.grey,
                 ),
               )
             : null,

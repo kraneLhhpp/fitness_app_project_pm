@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fitness_app_project/homepage_part/exercises/muscle_detail_page.dart';
 import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 import 'package:fitness_app_project/homepage_part/services/exercise_api_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TrainingDays extends StatefulWidget {
   const TrainingDays({super.key});
@@ -12,9 +13,17 @@ class TrainingDays extends StatefulWidget {
 
 class _TrainingDaysState extends State<TrainingDays> {
   final List<String> muscles = [
-    'abdominals', 'biceps', 'chest', 'forearms',
-    'glutes', 'lats', 'lower_back', 'middle_back',
-    'neck', 'quadriceps', 'triceps'
+    'abdominals',
+    'biceps',
+    'chest',
+    'forearms',
+    'glutes',
+    'lats',
+    'lower_back',
+    'middle_back',
+    'neck',
+    'quadriceps',
+    'triceps',
   ];
 
   final muscleImages = {
@@ -90,21 +99,23 @@ class _TrainingDaysState extends State<TrainingDays> {
                 border: Border.all(color: Colors.pinkAccent),
                 boxShadow: [
                   BoxShadow(
-                      color: Colors.pinkAccent.withValues(alpha: 0.3),
-                      blurRadius: 6),
+                    color: Colors.pinkAccent.withValues(alpha: 0.3),
+                    blurRadius: 6,
+                  ),
                 ],
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
-                      height: 60,
-                      child: Image.asset(muscleImages[muscle]!)),
+                    height: 60,
+                    child: Image.asset(muscleImages[muscle]!),
+                  ),
                   const SizedBox(height: 5),
                   Text(
                     muscle.toUpperCase(),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 12),
+                    style: GoogleFonts.jetBrainsMono(fontSize: 12),
                   ),
                 ],
               ),

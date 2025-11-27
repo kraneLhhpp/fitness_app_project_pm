@@ -1,5 +1,6 @@
 import 'package:fitness_app_project/homepage_part/main_menu_pages/daily_reports_page.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DailyReportsButton extends StatelessWidget {
   const DailyReportsButton({super.key});
@@ -21,14 +22,21 @@ class DailyReportsButton extends StatelessWidget {
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const <Widget>[
+            children: <Widget>[
               Text(
                 'Daily Reports',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
               ),
               Text(
                 'All your details in a single place.',
-                style: TextStyle(fontSize: 15, color: Colors.grey),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(color: Colors.grey, fontSize: 13),
+                ),
               ),
             ],
           ),
