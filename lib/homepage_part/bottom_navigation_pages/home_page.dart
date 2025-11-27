@@ -5,6 +5,7 @@ import 'package:fitness_app_project/homepage_part/widgets/header.dart';
 import 'package:fitness_app_project/homepage_part/widgets/training_days.dart';
 import 'package:fitness_app_project/homepage_part/widgets/workout_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
   final User user;
@@ -27,7 +28,12 @@ class HomePage extends StatelessWidget {
 
               Text(
                 'What are you training today?',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
               ),
               SizedBox(height: 10.0),
               TrainingDays(),
@@ -35,7 +41,12 @@ class HomePage extends StatelessWidget {
 
               Text(
                 'Your habits',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
               ),
               SizedBox(height: 10.0),
               HabitsSection(),

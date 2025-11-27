@@ -2,6 +2,7 @@ import 'package:fitness_app_project/homepage_part/exercises/exercise_details_pag
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/services/favorite_service.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MyCoursesPage extends StatefulWidget {
   final User user;
@@ -36,11 +37,14 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
         elevation: 0,
         backgroundColor: Colors.pinkAccent,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "My Courses",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       ),
@@ -50,25 +54,35 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.bookmark_border,
-                      size: 120, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.bookmark_border,
+                    size: 120,
+                    color: Colors.grey.shade400,
+                  ),
                   const SizedBox(height: 20),
-                  const Text(
+                  Text(
                     "No saved workouts yet",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     "Add exercises from the catalog",
-                    style: TextStyle(color: Colors.grey[600]),
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                 ],
               ),
             )
-
           : ListView.builder(
               padding: const EdgeInsets.all(16),
               itemCount: favorites.length,
@@ -90,16 +104,13 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(22),
-                      border: Border.all(
-                        color: Colors.pinkAccent,
-                        width: 2,
-                      ),
+                      border: Border.all(color: Colors.pinkAccent, width: 2),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 10,
                           offset: const Offset(0, 5),
                           color: Colors.black12,
-                        )
+                        ),
                       ],
                     ),
                     child: Row(
@@ -126,9 +137,11 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
                             children: [
                               Text(
                                 ex.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
+                                style: GoogleFonts.jetBrainsMono(
+                                  textStyle: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                  ),
                                 ),
                               ),
 
@@ -136,19 +149,30 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
 
                               Row(
                                 children: [
-                                  Icon(Icons.star,
-                                      size: 14, color: Colors.orange),
+                                  Icon(
+                                    Icons.star,
+                                    size: 14,
+                                    color: Colors.orange,
+                                  ),
                                   const SizedBox(width: 5),
                                   Text(
                                     ex.difficulty,
-                                    style: const TextStyle(fontSize: 14),
+                                    style: GoogleFonts.jetBrainsMono(
+                                      textStyle: TextStyle(fontSize: 13),
+                                    ),
                                   ),
                                   const SizedBox(width: 14),
-                                  Icon(Icons.timer,
-                                      size: 14, color: Colors.blueAccent),
+                                  Icon(
+                                    Icons.timer,
+                                    size: 14,
+                                    color: Colors.blueAccent,
+                                  ),
                                   const SizedBox(width: 5),
                                   Text(
                                     "${getMinutes(ex.difficulty)} min",
+                                    style: GoogleFonts.jetBrainsMono(
+                                      textStyle: TextStyle(fontSize: 13),
+                                    ),
                                   ),
                                 ],
                               ),
@@ -157,24 +181,35 @@ class _MyCoursesPageState extends State<MyCoursesPage> {
 
                               Row(
                                 children: [
-                                  Icon(Icons.sports_gymnastics,
-                                      size: 14, color: Colors.green),
+                                  Icon(
+                                    Icons.sports_gymnastics,
+                                    size: 14,
+                                    color: Colors.green,
+                                  ),
                                   const SizedBox(width: 5),
-                                  Text(ex.equipment),
+                                  Text(
+                                    ex.equipment,
+                                    style: GoogleFonts.jetBrainsMono(
+                                      textStyle: TextStyle(fontSize: 13),
+                                    ),
+                                  ),
                                 ],
-                              )
+                              ),
                             ],
                           ),
                         ),
 
                         IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.pinkAccent),
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.pinkAccent,
+                          ),
                           onPressed: () {
                             setState(() {
                               FavoriteService().removeFromFavorites(ex);
                             });
                           },
-                        )
+                        ),
                       ],
                     ),
                   ),

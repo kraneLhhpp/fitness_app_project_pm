@@ -2,12 +2,13 @@ import 'package:fitness_app_project/homepage_part/exercises/exercise_details_pag
 import 'package:fitness_app_project/homepage_part/services/completed_service.dart';
 import 'package:fitness_app_project/homepage_part/widgets/exercise_box.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DailyReportsPage extends StatefulWidget {
-const DailyReportsPage({super.key});
+  const DailyReportsPage({super.key});
 
-@override
-State<DailyReportsPage> createState() => _DailyReportsPageState();
+  @override
+  State<DailyReportsPage> createState() => _DailyReportsPageState();
 }
 
 class _DailyReportsPageState extends State<DailyReportsPage> {
@@ -17,24 +18,21 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
   @override
   Widget build(BuildContext context) {
     final filtered = selectedDay == null
-        ? completedService.completed   
+        ? completedService.completed
         : completedService.getByDay(selectedDay!);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Daily Reports',
-          style: TextStyle(color: Color(0xFF808B9A)),
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(color: Colors.grey),
+          ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.search),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
-          ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.menu)),
+          SizedBox(width: 10),
         ],
       ),
 
@@ -44,10 +42,14 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
-              const Text(
+              Text(
                 'Track your activity',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
 
               const SizedBox(height: 20),
@@ -55,23 +57,34 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
+                  Text(
                     'Recent activity',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
 
                   GestureDetector(
                     onTap: () {
                       setState(() => selectedDay = null);
                     },
-                    child: const Row(
+                    child: Row(
                       children: [
                         Text(
                           'Show All',
-                          style: TextStyle(color: Color(0xFF1B85F3)),
+                          style: GoogleFonts.jetBrainsMono(
+                            textStyle: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.pinkAccent,
+                            ),
+                          ),
                         ),
                         SizedBox(width: 5),
-                        Icon(Icons.replay_outlined, color: Color(0xFF1B85F3)),
+                        Icon(Icons.replay_outlined, color: Colors.pinkAccent),
                       ],
                     ),
                   ),
@@ -95,14 +108,23 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
                         setState(() => selectedDay = result);
                       }
                     },
-                    icon: const Icon(Icons.date_range, color: Colors.pinkAccent),
+                    icon: const Icon(
+                      Icons.date_range,
+                      color: Colors.pinkAccent,
+                    ),
                   ),
                   const SizedBox(width: 10),
                   Text(
                     selectedDay == null
                         ? 'All activity'
                         : selectedDay!.toString().split(" ").first,
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.pinkAccent,
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -113,10 +135,15 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
                 child: Builder(
                   builder: (context) {
                     if (filtered.isEmpty) {
-                      return const Center(
+                      return Center(
                         child: Text(
                           'No completed exercises',
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: GoogleFonts.jetBrainsMono(
+                            textStyle: TextStyle(
+                              fontSize: 16,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       );
                     }
@@ -141,11 +168,14 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               ExerciseBox(ex: entry.exercise),
+                              SizedBox(height: 5),
                               Text(
                                 'Completed: ${entry.completedDate.toString().split(" ").first}',
-                                style: const TextStyle(
+                                style: GoogleFonts.jetBrainsMono(
+                                  textStyle: TextStyle(
                                     fontSize: 12,
-                                    color: Colors.grey
+                                    color: Colors.grey,
+                                  ),
                                 ),
                               ),
                             ],
@@ -156,7 +186,6 @@ class _DailyReportsPageState extends State<DailyReportsPage> {
                   },
                 ),
               ),
-
             ],
           ),
         ),

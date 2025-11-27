@@ -2,6 +2,7 @@ import 'package:fitness_app_project/homepage_part/widgets/exercise_box.dart';
 import 'package:flutter/material.dart';
 import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 import 'package:fitness_app_project/homepage_part/exercises/exercise_details_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AllProgramsPage extends StatelessWidget {
   final List<Exercise> exercises;
@@ -16,9 +17,15 @@ class AllProgramsPage extends StatelessWidget {
         backgroundColor: Colors.pinkAccent,
         elevation: 0,
         centerTitle: true,
-        title: const Text(
+        title: Text(
           "All Programs",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
       ),
 
@@ -46,5 +53,3 @@ class AllProgramsPage extends StatelessWidget {
     );
   }
 }
-
-

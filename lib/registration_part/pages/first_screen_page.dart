@@ -43,17 +43,10 @@ class FirstScreenPageState extends State<FirstScreenPage> {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: SizedBox(
                   child: GridView.count(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.9,
+                    crossAxisCount: 1,
+                    childAspectRatio: 0.8,
                     physics: NeverScrollableScrollPhysics(),
-                    children: [
-                      _photo('welcome1'),
-                      _photo('welcome2'),
-                      _photo('welcome5'),
-                      _photo('welcome4'),
-                    ],
+                    children: [_photo('fitQuest')],
                   ),
                 ),
               ),
