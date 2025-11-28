@@ -14,9 +14,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser ?? user;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(user: user),
+      appBar: CustomAppBar(user: currentUser),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
