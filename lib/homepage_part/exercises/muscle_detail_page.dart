@@ -2,6 +2,7 @@ import 'package:fitness_app_project/homepage_part/exercises/all_programs_page.da
 import 'package:flutter/material.dart';
 import 'package:fitness_app_project/homepage_part/services/models/exercise.dart';
 import 'package:fitness_app_project/homepage_part/exercises/exercise_details_page.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class MuscleDetailsPage extends StatelessWidget {
   final String muscle;
@@ -54,7 +55,13 @@ class MuscleDetailsPage extends StatelessWidget {
         backgroundColor: Colors.pinkAccent,
         title: Text(
           muscle.toUpperCase(),
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         centerTitle: true,
       ),
@@ -62,7 +69,6 @@ class MuscleDetailsPage extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-
           ClipRRect(
             borderRadius: BorderRadius.circular(18),
             child: Stack(
@@ -83,7 +89,7 @@ class MuscleDetailsPage extends StatelessWidget {
                       gradient: LinearGradient(
                         colors: [
                           Colors.black.withValues(alpha: 0.7),
-                          Colors.transparent
+                          Colors.transparent,
                         ],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
@@ -91,14 +97,16 @@ class MuscleDetailsPage extends StatelessWidget {
                     ),
                     child: Text(
                       "Start Your $muscle Workout",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w700,
+                      style: GoogleFonts.jetBrainsMono(
+                        textStyle: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -109,9 +117,14 @@ class MuscleDetailsPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Programs",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: GoogleFonts.jetBrainsMono(
+                  textStyle: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               TextButton(
                 onPressed: () {
@@ -122,31 +135,38 @@ class MuscleDetailsPage extends StatelessWidget {
                     ),
                   );
                 },
-                child: const Text(
+                child: Text(
                   "See all",
-                  style: TextStyle(color: Colors.pinkAccent),
+                  style: GoogleFonts.jetBrainsMono(
+                    textStyle: TextStyle(color: Colors.pinkAccent),
+                    letterSpacing: -1,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 10),
 
-          // First two exercise cards
-          ...exercises.take(2).map((ex) => GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => ExerciseDetailsPage(exercise: ex),
+          ...exercises
+              .take(2)
+              .map(
+                (ex) => GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => ExerciseDetailsPage(exercise: ex),
+                      ),
+                    );
+                  },
+                  child: _programCard(
+                    title: ex.name,
+                    level: ex.difficulty,
+                    minutes: getMinutes(ex.difficulty),
+                  ),
                 ),
-              );
-            },
-            child: _programCard(
-              title: ex.name,
-              level: ex.difficulty,
-              minutes: getMinutes(ex.difficulty),
-            ),
-          )),
+              ),
         ],
       ),
     );
@@ -163,7 +183,10 @@ class MuscleDetailsPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.pinkAccent.withValues(alpha: 0.4), width: 1.5),
+        border: Border.all(
+          color: Colors.pinkAccent.withValues(alpha: 0.4),
+          width: 1.5,
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.pinkAccent.withValues(alpha: 0.25),
@@ -178,7 +201,9 @@ class MuscleDetailsPage extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
+            style: GoogleFonts.jetBrainsMono(
+              textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+            ),
           ),
           const SizedBox(height: 12),
 
@@ -186,11 +211,17 @@ class MuscleDetailsPage extends StatelessWidget {
             children: [
               const Icon(Icons.star, size: 16, color: Colors.pinkAccent),
               const SizedBox(width: 6),
-              Text(level),
+              Text(
+                level,
+                style: GoogleFonts.jetBrainsMono(textStyle: TextStyle()),
+              ),
               const SizedBox(width: 16),
               const Icon(Icons.timer, size: 16, color: Colors.green),
               const SizedBox(width: 6),
-              Text("$minutes min"),
+              Text(
+                "$minutes min",
+                style: GoogleFonts.jetBrainsMono(textStyle: TextStyle()),
+              ),
             ],
           ),
         ],

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -10,7 +11,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-
   @override
   Widget build(BuildContext context) {
     final name = widget.user.displayName ?? "User";
@@ -19,9 +19,15 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         centerTitle: true,
         elevation: 0,
@@ -31,8 +37,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
-
-            /// AVATAR + NAME
             Center(
               child: Column(
                 children: [
@@ -40,10 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       gradient: LinearGradient(
-                        colors: [
-                          Colors.pinkAccent,
-                          Colors.pink.shade200,
-                        ],
+                        colors: [Colors.pink, Colors.pink.shade200],
                       ),
                     ),
                     padding: const EdgeInsets.all(4),
@@ -62,17 +63,21 @@ class _ProfilePageState extends State<ProfilePage> {
                   const SizedBox(height: 16),
                   Text(
                     name,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     email,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey.shade600,
+                    style: GoogleFonts.jetBrainsMono(
+                      textStyle: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey.shade600,
+                      ),
                     ),
                   ),
                 ],
@@ -81,10 +86,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 30),
 
-            /// ACCOUNT SECTION
-            const Text(
+            Text(
               "Account",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: GoogleFonts.jetBrainsMono(
+                textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 10),
             _ProfileTile(
@@ -100,10 +106,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 25),
 
-            /// SETTINGS SECTION
-            const Text(
+            Text(
               "Settings",
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              style: GoogleFonts.jetBrainsMono(
+                textStyle: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
             ),
             const SizedBox(height: 10),
             _ProfileTile(
@@ -122,27 +129,25 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () {},
             ),
             _ProfileTile(
-              icon: Icons.logout_rounded, 
-              title: 'Log Out', 
+              icon: Icons.logout_rounded,
+              title: 'Log Out',
               onTap: () async {
-                  try {
-                    await FirebaseAuth.instance.signOut();
+                try {
+                  await FirebaseAuth.instance.signOut();
 
-                    if (!context.mounted) return;
-                    Navigator.pushNamedAndRemoveUntil(
-                      context,
-                      '/first_screen',
-                      (route) => false,
-                    );
-                  } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Failed to log out: $e'),
-                      ),
-                    );
-                  }
-                },
-            )
+                  if (!context.mounted) return;
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    '/first_screen',
+                    (route) => false,
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Failed to log out: $e')),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
@@ -150,7 +155,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-/// REUSABLE TILE
 class _ProfileTile extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -166,13 +170,20 @@ class _ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 2,
-      shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
-        shape:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         leading: Icon(icon, color: Colors.pinkAccent),
-        title: Text(title),
+        title: Text(
+          title,
+          style: GoogleFonts.jetBrainsMono(
+            textStyle: TextStyle(
+              fontSize: 14,
+              color: Colors.pinkAccent,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+        ),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,
       ),

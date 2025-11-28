@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fitness_app_project/homepage_part/main_menu_pages/stats_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final User user;
@@ -11,16 +12,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Size get preferredSize => const Size.fromHeight(70);
 
   String get userName {
-  if (user.displayName != null && user.displayName!.isNotEmpty) {
-    return user.displayName!.split(" ").first;
-  }
+    if (user.displayName != null && user.displayName!.isNotEmpty) {
+      return user.displayName!.split(" ").first;
+    }
 
-  if (user.email != null && user.email!.contains('@')) {
-    return user.email!.split('@').first;
-  }
+    if (user.email != null && user.email!.contains('@')) {
+      return user.email!.split('@').first;
+    }
 
-  return 'User';
-}
+    return 'User';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,15 +53,23 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text(
+                      Text(
                         'Hello,',
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
+                        style: GoogleFonts.jetBrainsMono(
+                          textStyle: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                          ),
+                        ),
                       ),
                       Text(
                         userName,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                        style: GoogleFonts.jetBrainsMono(
+                          textStyle: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
