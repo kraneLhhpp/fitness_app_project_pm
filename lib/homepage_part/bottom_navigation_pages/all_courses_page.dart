@@ -76,7 +76,7 @@ class _AllCoursesPageState extends State<AllCoursesPage> {
               style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             Text(
-              "${snapshot.error}", // Это покажет текст ошибки
+              "${snapshot.error}", 
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.red),
             ),

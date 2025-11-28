@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/main_menu_pages/edit_profile_page.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -13,8 +14,13 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final name = widget.user.displayName ?? "User";
-    final email = widget.user.email ?? "";
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) {
+       return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    final name = currentUser.displayName ?? "User";
+    final email = currentUser.email ?? "";
+    
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -32,7 +38,6 @@ class _ProfilePageState extends State<ProfilePage> {
           padding: const EdgeInsets.all(20),
           children: [
 
-            /// AVATAR + NAME
             Center(
               child: Column(
                 children: [
@@ -81,7 +86,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 30),
 
-            /// ACCOUNT SECTION
             const Text(
               "Account",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -90,7 +94,15 @@ class _ProfilePageState extends State<ProfilePage> {
             _ProfileTile(
               icon: Icons.person_outline,
               title: "Edit Profile",
-              onTap: () {},
+              onTap: () async{
+                await Navigator.push(
+                  context, 
+                  MaterialPageRoute(
+                    builder: (context) =>  EditProfilePage(user: widget.user),
+                  )
+                );
+                setState(() {});
+              },
             ),
             _ProfileTile(
               icon: Icons.lock_outline,
@@ -100,7 +112,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
             const SizedBox(height: 25),
 
-            /// SETTINGS SECTION
             const Text(
               "Settings",
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -150,7 +161,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-/// REUSABLE TILE
 class _ProfileTile extends StatelessWidget {
   final IconData icon;
   final String title;

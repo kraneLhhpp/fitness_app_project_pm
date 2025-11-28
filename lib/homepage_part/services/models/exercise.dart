@@ -19,7 +19,7 @@ class Exercise {
 
   factory Exercise.fromJson(Map<String, dynamic> json) {
     final String id = "${json['name']}_${json['muscle']}_${json['difficulty']}";
-    return Exercise(
+    return Exercise(  
       id: id,
       name: json['name'] ?? '',
       muscle: json['muscle'] ?? '',
