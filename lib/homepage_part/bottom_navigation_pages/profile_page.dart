@@ -1,4 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/main_menu_pages/edit_profile_page.dart';
+import 'package:fitness_app_project/homepage_part/widgets/about_app_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -13,9 +15,12 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final name = widget.user.displayName ?? "User";
-    final email = widget.user.email ?? "";
-
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+    final name = currentUser.displayName ?? "User"; 
+    final email = currentUser.email ?? "";
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -96,7 +101,12 @@ class _ProfilePageState extends State<ProfilePage> {
             _ProfileTile(
               icon: Icons.person_outline,
               title: "Edit Profile",
-              onTap: () {},
+              onTap: () async{
+                await Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => EditProfilePage(user: currentUser),)
+                );
+              },
             ),
             _ProfileTile(
               icon: Icons.lock_outline,
@@ -114,19 +124,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 10),
             _ProfileTile(
-              icon: Icons.notifications_outlined,
-              title: "Notifications",
-              onTap: () {},
-            ),
-            _ProfileTile(
-              icon: Icons.color_lens_outlined,
-              title: "Appearance",
-              onTap: () {},
-            ),
-            _ProfileTile(
               icon: Icons.info_outline,
               title: "About App",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => AboutAppPage())
+                );
+              },
             ),
             _ProfileTile(
               icon: Icons.logout_rounded,

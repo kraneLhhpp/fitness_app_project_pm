@@ -1,3 +1,4 @@
+import 'package:fitness_app_project/homepage_part/main_menu_pages/stats_store.dart';
 import 'package:fitness_app_project/onboarding_part/pages/journey_step_2_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -178,12 +179,11 @@ class _JourneyStep1PageState extends State<JourneyStep1Page> {
               child: ElevatedButton(
                 onPressed: isComplete
                     ? () {
-                        // final user = UserProfile(
-                        //   gender: selectedGender!,
-                        //   age: age!.round(),
-                        //   height: height!.round(),
-                        //   weight: weight!.round(),
-                        // );
+                        StatsStore.gender = selectedGender!;
+                        StatsStore.age = age!.round();
+                        StatsStore.height = height!.round();
+                        StatsStore.weight = weight!.round();
+
                         Navigator.push(
                           context,
                           PageRouteBuilder(
@@ -194,6 +194,7 @@ class _JourneyStep1PageState extends State<JourneyStep1Page> {
                         );
                       }
                     : null,
+
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(22),

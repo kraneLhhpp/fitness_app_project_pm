@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/main_menu_pages/stats_store.dart';
 import 'package:fitness_app_project/homepage_part/widgets/dark_header.dart';
 import 'package:fitness_app_project/homepage_part/widgets/habits_section.dart';
 import 'package:fitness_app_project/homepage_part/widgets/stats_row.dart';
 import 'package:fitness_app_project/homepage_part/widgets/training_days.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StatsScreen extends StatelessWidget {
   final User user;
@@ -12,6 +14,10 @@ class StatsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final age = StatsStore.age;
+    final height = StatsStore.height;
+    final weight = StatsStore.weight;
+
     return Scaffold(
       backgroundColor: Colors.pinkAccent,
       body: Column(
@@ -25,7 +31,12 @@ class StatsScreen extends StatelessWidget {
                   DarkHeader(user: user),
                   const SizedBox(height: 30),
 
-                  const StatsRow(),
+                  StatsRow(
+                    weight: (weight ?? 0).toDouble(),
+                    height: (height ?? 0).toDouble(),
+                    age: age ?? 0,
+                  ),
+
                   const SizedBox(height: 30),
                 ],
               ),
@@ -46,29 +57,33 @@ class StatsScreen extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       'What are you training today?',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.jetBrainsMono(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                    TrainingDays(),
+                    const TrainingDays(),
 
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     Text(
                       'Your habits',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                      style: GoogleFonts.jetBrainsMono(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                    HabitsSection(),
+                    const HabitsSection(),
                   ],
                 ),
               ),

@@ -55,7 +55,7 @@ class _HabitCardItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap, // ⬅️ Make the card clickable
+      onTap: onTap, 
       borderRadius: BorderRadius.circular(20),
       child: Container(
         height: 200,
@@ -65,7 +65,7 @@ class _HabitCardItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(color: Colors.pinkAccent),
           boxShadow: [
-            BoxShadow(color: Colors.pinkAccent.withOpacity(0.1), blurRadius: 6),
+            BoxShadow(color: Colors.pinkAccent.withValues(alpha: 0.1), blurRadius: 6),
           ],
         ),
         child: Column(

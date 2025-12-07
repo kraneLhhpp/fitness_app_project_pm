@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
-import 'package:fitness_app_project/secrets.dart';
+import 'package:fitness_app_project/api_secrets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/web.dart';
 
 class AiCoachPage extends StatefulWidget {
   const AiCoachPage({super.key});
@@ -13,6 +14,7 @@ class AiCoachPage extends StatefulWidget {
 class _AiCoachPageState extends State<AiCoachPage> {
   final TextEditingController _controller = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final logger = Logger();
 
   List<Map<String, String>> messages = [
     {
@@ -65,7 +67,7 @@ class _AiCoachPageState extends State<AiCoachPage> {
         messages.add({"sender": "ai", "text": aiText});
       });
     } catch (e) {
-      print("ERROR: $e");
+      logger.e("ERROR: $e");
       setState(() {
         messages.removeLast();
         messages.add({"sender": "ai", "text": "AI Error: $e"});
@@ -124,7 +126,7 @@ class _AiCoachPageState extends State<AiCoachPage> {
                     decoration: BoxDecoration(
                       color: isUser
                           ? Colors.pinkAccent
-                          : Colors.pinkAccent.withOpacity(0.15),
+                          : Colors.pinkAccent.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Text(

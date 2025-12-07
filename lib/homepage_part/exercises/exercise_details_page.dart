@@ -95,7 +95,7 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
                         ),
                       ),
                       Text(
-                        "${widget.exercise.muscle}",
+                        widget.exercise.muscle,
                         style: GoogleFonts.jetBrainsMono(
                           textStyle: TextStyle(fontSize: 14),
                         ),
@@ -113,7 +113,7 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
                         ),
                       ),
                       Text(
-                        "${widget.exercise.equipment}",
+                        widget.exercise.equipment,
                         style: GoogleFonts.jetBrainsMono(
                           textStyle: TextStyle(fontSize: 14),
                         ),
@@ -131,7 +131,7 @@ class _ExerciseDetailsPageState extends State<ExerciseDetailsPage> {
                         ),
                       ),
                       Text(
-                        "${widget.exercise.difficulty}",
+                        widget.exercise.difficulty,
                         style: GoogleFonts.jetBrainsMono(
                           textStyle: TextStyle(fontSize: 14),
                         ),
