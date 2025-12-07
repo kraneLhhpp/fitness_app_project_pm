@@ -44,7 +44,7 @@ class JourneyStartPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 50),
+            Spacer(),
             CustomActionButton(
               text: 'Start',
               backgroundColor: Colors.pinkAccent,
@@ -69,16 +69,19 @@ class JourneyStartPage extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => BottomNavigation(user: user), 
+                      builder: (_) => BottomNavigation(user: user),
                     ),
                   );
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('No user found, please login again')),
+                    const SnackBar(
+                      content: Text('No user found, please login again'),
+                    ),
                   );
                 }
               },
             ),
+            SizedBox(height: 30),
           ],
         ),
       ),

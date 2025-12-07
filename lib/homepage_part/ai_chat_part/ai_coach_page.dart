@@ -65,7 +65,6 @@ class _AiCoachPageState extends State<AiCoachPage> {
         messages.add({"sender": "ai", "text": aiText});
       });
     } catch (e) {
-      print("ERROR: $e");
       setState(() {
         messages.removeLast();
         messages.add({"sender": "ai", "text": "AI Error: $e"});
@@ -124,7 +123,7 @@ class _AiCoachPageState extends State<AiCoachPage> {
                     decoration: BoxDecoration(
                       color: isUser
                           ? Colors.pinkAccent
-                          : Colors.pinkAccent.withOpacity(0.15),
+                          : Colors.pinkAccent.withAlpha(125),
                       borderRadius: BorderRadius.circular(18),
                     ),
                     child: Text(

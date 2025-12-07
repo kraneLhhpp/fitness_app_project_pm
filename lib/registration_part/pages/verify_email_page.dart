@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/homepage_part/bottom_navigation_pages/bottom_navigation.dart';
+import 'package:fitness_app_project/onboarding_part/pages/journey_start_page.dart';
 import 'package:fitness_app_project/registration_part/pages/first_screen_page.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     if (user == null) {
       timer?.cancel();
       return;
-      }
+    }
 
     await user.reload();
     final verified = user.emailVerified;
@@ -65,11 +65,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
     if (verified) {
       timer?.cancel();
+
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => BottomNavigation(user: user),
-        ),
+        MaterialPageRoute(builder: (_) => JourneyStartPage()),
       );
     }
   }
@@ -91,8 +90,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     } catch (e) {
       logger.e("Error sending email: $e");
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Failed to send email')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to send email')));
     }
   }
 
@@ -130,14 +130,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => FirstScreenPage(), 
-                      ),
+                      MaterialPageRoute(builder: (_) => FirstScreenPage()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                   child: const Text("Go to Main Menu"),
                 ),
               ],

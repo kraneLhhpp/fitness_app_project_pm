@@ -1,44 +1,53 @@
 import 'package:flutter/material.dart';
 
 class StatsRow extends StatelessWidget {
-  const StatsRow({super.key});
+  final double weight;
+  final double height;
+  final int age;
+
+  const StatsRow({
+    super.key,
+    required this.weight,
+    required this.height,
+    required this.age,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: Color(0xFF2C2C2C),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
+        children: [
           _StatItem(
-            label: 'Weight',
-            value: '86.5',
-            unit: 'kg',
-            imgPath: 'assets/images/weightIcon.png',
+            label: "Weight",
+            value: weight.toString(),
+            unit: "kg",
+            icon: Icons.fitness_center,
           ),
-          SizedBox(
+          const SizedBox(
             height: 60,
             child: VerticalDivider(color: Colors.grey, width: 1),
           ),
           _StatItem(
-            label: 'Step',
-            value: '1428',
-            unit: 'steps',
-            imgPath: 'assets/images/stepIcon.png',
+            label: "Height",
+            value: height.toString(),
+            unit: "cm",
+            icon: Icons.height,
           ),
-          SizedBox(
+          const SizedBox(
             height: 60,
             child: VerticalDivider(color: Colors.grey, width: 1),
           ),
           _StatItem(
-            label: 'Heart Rate',
-            value: '80',
-            unit: 'Bpm',
-            imgPath: 'assets/images/heartbeatIcon.png',
+            label: "Age",
+            value: age.toString(),
+            unit: "years",
+            icon: Icons.favorite,
           ),
         ],
       ),
@@ -50,13 +59,13 @@ class _StatItem extends StatelessWidget {
   final String label;
   final String value;
   final String unit;
-  final String imgPath;
+  final IconData icon;
 
   const _StatItem({
     required this.label,
     required this.value,
     required this.unit,
-    required this.imgPath,
+    required this.icon,
   });
 
   @override
@@ -66,7 +75,10 @@ class _StatItem extends StatelessWidget {
       children: [
         Row(
           children: [
-            SizedBox(height: 20, child: Image.asset(imgPath)),
+            SizedBox(
+              height: 20,
+              child: Icon(icon, color: Colors.white, size: 18),
+            ),
             const SizedBox(width: 5),
             Text(
               label,
