@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     if (user == null) {
       timer?.cancel();
       return;
-      }
+    }
 
     await user.reload();
     final verified = user.emailVerified;
@@ -65,6 +65,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
     if (verified) {
       timer?.cancel();
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
@@ -91,8 +92,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     } catch (e) {
       logger.e("Error sending email: $e");
       if (!mounted) return;
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Failed to send email')));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Failed to send email')));
     }
   }
 
@@ -130,14 +132,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                        builder: (_) => FirstScreenPage(), 
-                      ),
+                      MaterialPageRoute(builder: (_) => FirstScreenPage()),
                     );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                   child: const Text("Go to Main Menu"),
                 ),
               ],

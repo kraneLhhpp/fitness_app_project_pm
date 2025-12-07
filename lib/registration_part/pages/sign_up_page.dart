@@ -1,12 +1,7 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fitness_app_project/registration_part/pages/login_page.dart';
-import 'package:fitness_app_project/registration_part/widgets/quote_header.dart';
 import 'package:flutter/material.dart';
-import 'package:fitness_app_project/registration_part/widgets/custom_text_field.dart';
-import 'package:fitness_app_project/registration_part/widgets/quotes_swipes.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:logger/web.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -18,114 +13,95 @@ class SignUpPage extends StatefulWidget {
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _fNameController = TextEditingController();
-  final _lNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _passwordController = TextEditingController();
+  final _fName = TextEditingController();
+  final _lName = TextEditingController();
+  final _email = TextEditingController();
+  final _phone = TextEditingController();
+  final _password = TextEditingController();
 
-  late QuotesSwipes _quotesSwipes;
   bool isHiddenPassword = true;
-  final logger = Logger();
-
-  @override
-  void initState() {
-    _quotesSwipes = QuotesSwipes(totalQuotes: 4);
-    super.initState();
-  }
-
-  void togglePasswordView() {
-    setState(() {
-      isHiddenPassword = !isHiddenPassword;
-    });
-  }
 
   @override
   void dispose() {
-    _fNameController.dispose();
-    _lNameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _passwordController.dispose();
+    _fName.dispose();
+    _lName.dispose();
+    _email.dispose();
+    _phone.dispose();
+    _password.dispose();
     super.dispose();
   }
 
   Future<void> signUp() async {
-  if (!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
-  try {
-    UserCredential cred = await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
-    );
+    try {
+      // REGISTER USER
+      UserCredential cred = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+            email: _email.text.trim(),
+            password: _password.text.trim(),
+          );
 
-    User? user = cred.user;
+      User? user = cred.user;
 
-    await user?.updateDisplayName(
-        "${_fNameController.text.trim()} ${_lNameController.text.trim()}");
-    await user?.reload();
-    user = FirebaseAuth.instance.currentUser;
+      // UPDATE NAME
+      await user?.updateDisplayName(
+        "${_fName.text.trim()} ${_lName.text.trim()}",
+      );
 
-    await user?.sendEmailVerification();
+      // SEND EMAIL VERIFICATION
+      await user?.sendEmailVerification();
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    Navigator.pushNamed(
-      context,
-      '/verify_email',
-    );
-  } on FirebaseAuthException catch (e) {
-    if (!mounted) return;
+      // GO TO VERIFY PAGE
+      Navigator.pushNamed(context, '/verify_email');
+    } on FirebaseAuthException catch (e) {
+      String message = "Something went wrong";
 
-    logger.e("FIREBASE ERROR: ${e.code} — ${e.message}");
+      if (e.code == "email-already-in-use") {
+        message = "This email is already registered";
+      } else if (e.code == "invalid-email") {
+        message = "Email format is invalid";
+      } else if (e.code == "weak-password") {
+        message = "Password must be at least 6 characters";
+      } else if (e.code == "operation-not-allowed") {
+        message = "Email/password sign-in disabled in Firebase";
+      }
 
-    String message = 'Something went wrong';
-    if (e.code == 'email-already-in-use') {
-      message = 'Email is already in use';
-    } else if (e.code == 'weak-password') {
-      message = 'Password must be at least 6 characters';
-    } else if (e.code == 'invalid-email') {
-      message = 'Invalid email format';
-    } else if (e.code == 'operation-not-allowed') {
-      message = 'Email/password sign-in is disabled in Firebase';
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          message,
-          style: GoogleFonts.jetBrainsMono(
-            textStyle: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: Colors.pinkAccent,
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          backgroundColor: Colors.pinkAccent,
         ),
-      ),
-    );
+      );
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Colors.pink[50],
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: screenHeight,
-          child: SafeArea(
-            bottom: false,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(24),
+          child: Form(
+            key: _formKey,
             child: Column(
               children: [
-                Flexible(
-                  flex: 4,
-                  child: QuoteHeader(
-                    quotesSwipes: _quotesSwipes,
-                    onDotTap: (i) => setState(() => _quotesSwipes.currentIndex = i),
-                    onSwipeLeft: () => setState(() => _quotesSwipes.swipeLeft()),
-                    onSwipeRight: () => setState(() => _quotesSwipes.swipeRight()),
+                const SizedBox(height: 40),
+
+                Text(
+                  "Sign Up",
+                  style: GoogleFonts.jetBrainsMono(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 Expanded(
@@ -293,8 +269,41 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                       ),
+                      onPressed: () {
+                        setState(() {
+                          isHiddenPassword = !isHiddenPassword;
+                        });
+                      },
                     ),
                   ),
+                  validator: (v) => v!.isEmpty ? "Password required" : null,
+                ),
+
+                const SizedBox(height: 30),
+
+                // SIGNUP BUTTON
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.pinkAccent,
+                    minimumSize: const Size(double.infinity, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  onPressed: signUp,
+                  child: const Text(
+                    "Create Account",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, "/login");
+                  },
+                  child: const Text("Already have an account? Login"),
                 ),
               ],
             ),

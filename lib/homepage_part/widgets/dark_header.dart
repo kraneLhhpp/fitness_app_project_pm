@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class DarkHeader extends StatelessWidget {
   const DarkHeader({super.key, required this.user});
@@ -23,12 +24,20 @@ class DarkHeader extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Hello,', style: TextStyle(color: Colors.grey)),
+                Text(
+                  'Hello,',
+                  style: GoogleFonts.jetBrainsMono(
+                    textStyle: TextStyle(color: Colors.white70, fontSize: 14),
+                  ),
+                ),
                 Text(
                   userName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+                  style: GoogleFonts.jetBrainsMono(
+                    textStyle: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
