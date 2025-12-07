@@ -8,6 +8,12 @@ class WorkoutCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context, 
+          MaterialPageRoute(builder: (context) => JourneyStartPage())
+        );
+      },
       child: Container(
         padding: const EdgeInsets.all(15.0),
         decoration: BoxDecoration(

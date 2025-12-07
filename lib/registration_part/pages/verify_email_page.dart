@@ -68,7 +68,9 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => JourneyStartPage()),
+        MaterialPageRoute(
+          builder: (_) => JourneyStartPage(),
+        ),
       );
     }
   }

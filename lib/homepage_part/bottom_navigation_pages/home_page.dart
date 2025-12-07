@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/widgets/community_button.dart';
 import 'package:fitness_app_project/homepage_part/widgets/daily_report_button.dart';
 import 'package:fitness_app_project/homepage_part/widgets/habits_section.dart';
 import 'package:fitness_app_project/homepage_part/widgets/header.dart';
@@ -14,9 +15,10 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser ?? user;
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: CustomAppBar(user: user),
+      appBar: CustomAppBar(user: currentUser),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: EdgeInsets.all(15.0),
@@ -48,10 +50,11 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10.0),
+              const SizedBox(height: 10.0),
               HabitsSection(),
-              SizedBox(height: 30.0),
-
+              const SizedBox(height: 30.0),
+              CommunityButton(),
+              const SizedBox(height: 20),
               DailyReportsButton(),
             ],
           ),
