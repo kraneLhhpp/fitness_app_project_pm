@@ -1,4 +1,5 @@
 import 'package:fitness_app_project/homepage_part/ai_chat_part/ai_coach_page.dart';
+import 'package:fitness_app_project/homepage_part/widgets/workoutplan_step_1_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -15,6 +16,12 @@ class HabitsSection extends StatelessWidget {
             subtitle: '73% achived',
             imgPath: 'assets/images/goalsIcon.png',
             iconColor: Colors.orange,
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => WorkoutplanStep1Page()),
+              );
+            },
           ),
         ),
         SizedBox(width: 15.0),

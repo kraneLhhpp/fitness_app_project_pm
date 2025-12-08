@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:fitness_app_project/secrets.dart';
+import 'package:fitness_app_project/api_secrets.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
