@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fitness_app_project/homepage_part/main_menu_pages/change_password_page.dart';
 import 'package:fitness_app_project/homepage_part/main_menu_pages/edit_profile_page.dart';
 import 'package:fitness_app_project/homepage_part/widgets/about_app_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -13,6 +17,27 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  String? _localAvatarPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadAvatar(); 
+  }
+
+  Future<void> _loadAvatar() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+    final prefs = await SharedPreferences.getInstance();
+    final path = prefs.getString('avatar_${user.uid}');
+    
+    if (path != null && await File(path).exists()) {
+      setState(() {
+        _localAvatarPath = path;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -45,25 +70,12 @@ class _ProfilePageState extends State<ProfilePage> {
             Center(
               child: Column(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [Colors.pink, Colors.pink.shade200],
-                      ),
-                    ),
-                    padding: const EdgeInsets.all(4),
-                    child: CircleAvatar(
-                      radius: 55,
-                      backgroundColor: Colors.white,
-                      child: ClipOval(
-                        child: Image.asset(
-                          'assets/images/avatarImg.png',
-                          fit: BoxFit.cover,
-                          height: 100,
-                        ),
-                      ),
-                    ),
+                  CircleAvatar(
+                    radius: 55,
+                    backgroundColor: Colors.white,
+                    backgroundImage: _localAvatarPath != null
+                      ?FileImage(File(_localAvatarPath!))
+                      : const AssetImage('assets/images/avatarImg.png') as ImageProvider,
                   ),
                   const SizedBox(height: 16),
                   Text(
@@ -106,12 +118,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   context, 
                   MaterialPageRoute(builder: (context) => EditProfilePage(user: currentUser),)
                 );
+                setState(() {});
+                _loadAvatar();
               },
             ),
             _ProfileTile(
               icon: Icons.lock_outline,
               title: "Change Password",
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                  context, 
+                  MaterialPageRoute(builder: (context) => const ChangePasswordPage())
+                );
+              },
             ),
 
             const SizedBox(height: 25),

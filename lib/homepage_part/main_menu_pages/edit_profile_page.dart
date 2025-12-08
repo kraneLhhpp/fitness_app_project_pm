@@ -1,5 +1,9 @@
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class EditProfilePage extends StatefulWidget {
   final User user;
@@ -13,233 +17,131 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _nameController;
   late TextEditingController _emailController;
-  bool _isUpdating = false;
+  
+  File? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+  bool _isLoading = false;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.user.displayName);
     _emailController = TextEditingController(text: widget.user.email);
+    _loadLocalImage(); // Пытаемся загрузить текущее сохраненное фото
   }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _updateProfile() async {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _loadLocalImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    final String? path = prefs.getString('avatar_${widget.user.uid}');
+    if (path != null && File(path).existsSync()) {
       setState(() {
-        _isUpdating = true;
+        _imageFile = File(path);
       });
+    }
+  }
+
+  Future<void> _pickImage() async {
+    final XFile? picked = await _picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      setState(() {
+        _imageFile = File(picked.path);
+      });
+    }
+  }
+
+  Future<void> _saveImageLocally() async {
+    if (_imageFile == null) return;
+    
+    final appDir = await getApplicationDocumentsDirectory();
+    final String fileName = '${widget.user.uid}_avatar.jpg';
+    final File localImage = await _imageFile!.copy('${appDir.path}/$fileName');
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('avatar_${widget.user.uid}', localImage.path);
+  }
+
+  Future<void> _saveProfile() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
       try {
-        await widget.user.updateDisplayName(_nameController.text.trim());
-        await widget.user.reload();
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Profile succesfully uptaded'),
-            backgroundColor: Colors.green,
-          ),
-        );
-        Navigator.pop(context);
-      } catch (e) {
-        if (!mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Errir with update: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } finally {
-        if (mounted) {
-          setState(() {
-            _isUpdating = false;
-          });
+        if (_nameController.text.trim() != widget.user.displayName) {
+          await widget.user.updateDisplayName(_nameController.text.trim());
         }
+
+        await _saveImageLocally();
+
+        await widget.user.reload(); 
+        
+        if (!mounted) return;
+        Navigator.pop(context, true); 
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Ошибка: $e')));
+      } finally {
+        if(mounted) setState(() => _isLoading = false);
       }
     }
   }
 
   @override
-
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
+        title: const Text("Редактировать"), 
+        backgroundColor: Colors.pinkAccent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, size: 20),
+          icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Edit Profile',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.pinkAccent,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                Center(
-                  child: Stack(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              Colors.pinkAccent,
-                              Colors.pink.shade200,
-                            ],
-                          ),
-                        ),
-                        padding: const EdgeInsets.all(4),
-                        child: CircleAvatar(
-                          radius: 55,
-                          backgroundColor: Colors.white,
-                          child: ClipOval(
-                            child: Image.asset(
-                              'assets/images/avatarImg.png',
-                              fit: BoxFit.cover,
-                              height: 100,
-                              width: 100,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: GestureDetector(
-                          onTap: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Logic to change photo')),
-                            );
-                          },
-                          child: Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.pinkAccent,
-                              border: Border.all(color: Colors.white, width: 3),
-                            ),
-                            child: const Icon(
-                              Icons.camera_alt,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                _buildTextField(
-                  controller: _nameController,
-                  label: "Full Name",
-                  icon: Icons.person_outline,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter the Name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-                _buildTextField(
-                  controller: _emailController,
-                  label: "Email",
-                  icon: Icons.email_outlined,
-                  isReadOnly: true, 
-                ),
-                const SizedBox(height: 40),
-                SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: _isUpdating ? null : _updateProfile,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.pinkAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      elevation: 2,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: _pickImage,
+                child: CircleAvatar(
+                  radius: 60,
+                  backgroundColor: Colors.pink.shade100,
+                  backgroundImage: _imageFile != null 
+                      ? FileImage(_imageFile!) 
+                      : const AssetImage('assets/images/avatarImg.png') as ImageProvider,
+                  child: const Align(
+                    alignment: Alignment.bottomRight,
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.white,
+                      child: Icon(Icons.camera_alt, color: Colors.pinkAccent, size: 20),
                     ),
-                    child: _isUpdating
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            "Save Changes",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white
-                            ),
-                          ),
                   ),
                 ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 30),
+              TextFormField(
+                controller: _nameController,
+                decoration: const InputDecoration(labelText: "Имя", prefixIcon: Icon(Icons.person)),
+                validator: (v) => v!.isEmpty ? "Введите имя" : null,
+              ),
+              const SizedBox(height: 20),
+              TextFormField(
+                controller: _emailController,
+                readOnly: true,
+                decoration: const InputDecoration(labelText: "Email", prefixIcon: Icon(Icons.email)),
+              ),
+              const SizedBox(height: 30),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _isLoading ? null : _saveProfile,
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.pinkAccent, padding: const EdgeInsets.all(15)),
+                  child: _isLoading ? const CircularProgressIndicator(color: Colors.white) : const Text("Сохранить", style: TextStyle(fontSize: 18, color: Colors.white)),
+                ),
+              )
+            ],
           ),
         ),
       ),
-    );
-  }
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    bool isReadOnly = false,
-    String? Function(String?)? validator,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.black87,
-          ),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: controller,
-          readOnly: isReadOnly,
-          validator: validator,
-          style: TextStyle(
-            color: isReadOnly ? Colors.grey.shade600 : Colors.black,
-          ),
-          decoration: InputDecoration(
-            prefixIcon: Icon(icon, color: Colors.pinkAccent),
-            filled: true,
-            fillColor: isReadOnly ? Colors.grey.shade100 : Colors.white,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.grey.shade300),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(16),
-              borderSide: const BorderSide(color: Colors.pinkAccent, width: 2),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
